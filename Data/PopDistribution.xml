@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popdata weight="10000">
+  <high_strata weight="25">
+    <strata_industries>
+      <jewelry>1</jewelry>
+      <cosmetics>1</cosmetics>
+      <vehicles>2</vehicles>
+      <pmcs>1</pmcs>
+      <literature>1</literature>
+      <holonet>0.1</holonet>
+      <music>1.2</music>
+      <sports>1.5</sports>
+      <news>1</news>
+      <grocery_stores>0.25</grocery_stores>
+      <restaurants>1.5</restaurants>
+      <retail>1</retail>
+      <interplanetary_comms>1</interplanetary_comms>
+      <personal_devices>0.3</personal_devices>
+      <cyber_entertainment>0.25</cyber_entertainment>
+      <social_media>1</social_media>
+      <investment_equity>5</investment_equity>
+      <savings_loans>2</savings_loans>
+      <insurance>1</insurance>
+      <hospitals>0.9</hospitals>
+      <private_doctors>2</private_doctors>
+      <body_enhancements>3</body_enhancements>
+      <hotels>1</hotels>
+      <tourism_complexes>1</tourism_complexes>
+      <space_flight>1.2</space_flight>
+      <commercial_real_estate>1</commercial_real_estate>
+      <residential_real_estate>1.5</residential_real_estate>
+      <education_materials>1</education_materials>
+      <universities>2</universities>
+      <private_schools>2</private_schools>
+      <cyber_security>1.2</cyber_security>
+    </strata_industries>
+    <jobs>
+      <administrator weight="1"></administrator>
+      <merchant weight="20"></merchant>
+      <executive weight="160"></executive>
+    </jobs>
+  </high_strata>
+  <middle_strata weight ="2">
+    <strata_industries>
+      <cosmetics>1</cosmetics>
+      <vehicles>3</vehicles>
+      <pmcs>0.6</pmcs>
+      <literature>0.8</literature>
+      <holonet>1</holonet>
+      <music>1</music>
+      <sports>1</sports>
+      <news>1</news>
+      <grocery_stores>4</grocery_stores>
+      <fast_food>2</fast_food>
+      <restaurants>1</restaurants>
+      <retail>1</retail>
+      <interplanetary_comms>0.8</interplanetary_comms>
+      <personal_devices>1</personal_devices>
+      <cyber_entertainment>1.2</cyber_entertainment>
+      <social_media>1</social_media>
+      <investment_equity>0.5</investment_equity>
+      <savings_loans>2</savings_loans>
+      <insurance>1</insurance>
+      <pharmaceuticals>1.5</pharmaceuticals>
+      <hospitals>1</hospitals>
+      <private_doctors>1.2</private_doctors>
+      <hotels>1</hotels>
+      <tourism_complexes>1</tourism_complexes>
+      <space_flight>0.9</space_flight>
+      <planetary_transportation>1</planetary_transportation>
+      <commercial_real_estate>1</commercial_real_estate>
+      <residential_real_estate>1.5</residential_real_estate>
+      <education_materials>1</education_materials>
+      <universities>1.5</universities>
+    </strata_industries>
+    <jobs>
+      <artisan weight="0.9">
+        <heavy_manufacturing>1</heavy_manufacturing>
+        <jewelry>1.1</jewelry>
+        <cosmetics>1</cosmetics>
+        <vehicles>1</vehicles>
+        <electronics>0.7</electronics>
+        <toys_and_games>0.8</toys_and_games>
+        <domestic_products>1.2</domestic_products>
+        <retail>1</retail>
+      </artisan>
+      <bureaucrat weight="1.5"></bureaucrat>
+      <refiners weight="0.85">
+        <chemicals>3</chemicals>
+        <pharmaceuticals>1</pharmaceuticals>
+        <refining>0.3</refining>
+      </refiners>
+      <culture_worker weight="1">
+        <literature>1.5</literature>
+        <music>0.5</music>
+      </culture_worker>
+      <enforcer weight="1.1">
+        <cyber_security>1</cyber_security>
+      </enforcer>
+      <entertainer weight="1.1">
+        <holonet>1</holonet>
+        <music>1</music>
+        <cyber_entertainment>1</cyber_entertainment>
+        <tourism_complexes>0.75</tourism_complexes>
+      </entertainer>
+      <manager weight="2"></manager>
+      <healthcare weight="1.2">
+        <pharmaceuticals>0.8</pharmaceuticals>
+        <hospitals>1.8</hospitals>
+        <private_doctors>1.8</private_doctors>
+        <medical_research>0.8</medical_research>
+        <body_enancement>0.3</body_enancement>
+      </healthcare>
+      <foundry weight="0.8">
+        <refining>1</refining>
+        <heavy_manufacturing>10</heavy_manufacturing>
+        <naval_contracting>4</naval_contracting>
+        <land_contracting>2</land_contracting>
+      </foundry>
+      <researcher weight="1.8">
+        <electronics>0.9</electronics>
+        <toys_and_games>0.1</toys_and_games>
+        <medical_research>2</medical_research>
+        <universities>2</universities>
+        <pure_rnd>4</pure_rnd>
+      </researcher>
+    </jobs>
+  </middle_strata>
+  <low_strata weight="1">
+    <strata_industries>
+      <vehicles>0.5</vehicles>
+      <pmcs>1.5</pmcs>
+      <holonet>2</holonet>
+      <music>1</music>
+      <sports>1</sports>
+      <news>0.1</news>
+      <grocery_stores>5</grocery_stores>
+      <fast_food>3</fast_food>
+      <retail>0.6</retail>
+      <personal_devices>0.7</personal_devices>
+      <cyber_entertainment>2</cyber_entertainment>
+      <social_media>1</social_media>
+      <savings_loans>1.2</savings_loans>
+      <insurance>1</insurance>
+      <pharmaceuticals>2</pharmaceuticals>
+      <hospitals>1</hospitals>
+      <private_doctors>0.6</private_doctors>
+      <space_cruises>1.5</space_cruises>
+      <tourism_complexes>1</tourism_complexes>
+      <planetary_transportation>2</planetary_transportation>
+      <commercial_real_estate>1</commercial_real_estate>
+      <residential_real_estate>1</residential_real_estate>
+      <universities>0.2</universities>
+    </strata_industries>
+    <jobs>
+      <clerk weight="0.75">
+        <grocery_stores>2</grocery_stores>
+        <fast_food>2</fast_food>
+        <restaurants>0.5</restaurants>
+        <retail>2</retail>
+        <investment_equity>0.1</investment_equity>
+        <savings_loans>0.4</savings_loans>
+        <insurance>0.8</insurance>
+        <hotels>0.7</hotels>
+        <education_materials>0.3</education_materials>
+      </clerk>
+      <miner weight="1.2">
+        <mining>1</mining>
+      </miner>
+      <farmer weight="1">
+        <livestock>1.25</livestock>
+        <cash_crops>1</cash_crops>
+        <staple_foods>1.5</staple_foods>
+        <fishing>0.8</fishing>
+        <grocery_stores>0.6</grocery_stores>
+        <fast_food>0.3</fast_food>
+      </farmer>
+      <soldier weight="1.8">
+        <land_contracting>2</land_contracting>
+        <pmcs>1</pmcs>
+      </soldier>
+      <technician weight="1.1">
+        <energy>1.2</energy>
+        <electronics>1</electronics>
+      </technician>
+    </jobs>
+  </low_strata>
+</popdata> 

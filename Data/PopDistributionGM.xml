@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popdata weight="1">
+  <high_strata weight="1">
+    <strata_industries>
+      <jewelry>1</jewelry>
+      <cosmetics>1</cosmetics>
+      <vehicles>1</vehicles>
+      <pmcs>1</pmcs>
+      <literature>1</literature>
+      <holonet>1</holonet>
+      <music>1</music>
+      <sports>1</sports>
+      <news>1</news>
+      <grocery_stores>1</grocery_stores>
+      <restaurants>1</restaurants>
+      <retail>1</retail>
+      <interplanetary_comms>1</interplanetary_comms>
+      <personal_devices>1</personal_devices>
+      <cyber_entertainment>1</cyber_entertainment>
+      <social_media>1</social_media>
+      <investment_equity>1</investment_equity>
+      <savings_loans>1</savings_loans>
+      <insurance>1</insurance>
+      <hospitals>1</hospitals>
+      <private_doctors>1</private_doctors>
+      <body_enhancements>1</body_enhancements>
+      <hotels>1</hotels>
+      <tourism_complexes>1</tourism_complexes>
+      <space_flight>1</space_flight>
+      <commercial_real_estate>1</commercial_real_estate>
+      <residential_real_estate>1</residential_real_estate>
+      <education_materials>1</education_materials>
+      <universities>1</universities>
+      <private_schools>1</private_schools>
+      <cyber_security>1</cyber_security>
+    </strata_industries>
+    <jobs>
+      <administrator weight="1"></administrator>
+      <merchant weight="1"></merchant>
+      <executive weight="1"></executive>
+    </jobs>
+  </high_strata>
+  <middle_strata weight ="1">
+    <strata_industries>
+      <cosmetics>1</cosmetics>
+      <vehicles>1</vehicles>
+      <pmcs>1</pmcs>
+      <literature>1</literature>
+      <holonet>1</holonet>
+      <music>1</music>
+      <sports>1</sports>
+      <news>1</news>
+      <grocery_stores>1</grocery_stores>
+      <fast_food>1</fast_food>
+      <restaurants>1</restaurants>
+      <retail>1</retail>
+      <interplanetary_comms>1</interplanetary_comms>
+      <personal_devices>1</personal_devices>
+      <cyber_entertainment>1</cyber_entertainment>
+      <social_media>1</social_media>
+      <investment_equity>1</investment_equity>
+      <savings_loans>1</savings_loans>
+      <insurance>1</insurance>
+      <pharmaceuticals>1</pharmaceuticals>
+      <hospitals>1</hospitals>
+      <private_doctors>1</private_doctors>
+      <hotels>1</hotels>
+      <tourism_complexes>1</tourism_complexes>
+      <space_flight>1</space_flight>
+      <planetary_transportation>1</planetary_transportation>
+      <commercial_real_estate>1</commercial_real_estate>
+      <residential_real_estate>1</residential_real_estate>
+      <education_materials>1</education_materials>
+      <universities>1</universities>
+    </strata_industries>
+    <jobs>
+      <artisan weight="1">
+        <heavy_manufacturing>1</heavy_manufacturing>
+        <jewelry>1</jewelry>
+        <cosmetics>1</cosmetics>
+        <vehicles>1</vehicles>
+        <electronics>1</electronics>
+        <toys_and_games>1</toys_and_games>
+        <domestic_products>1</domestic_products>
+        <retail>1</retail>
+      </artisan>
+      <bureaucrat weight="1"></bureaucrat>
+      <refiners weight="1">
+        <chemicals>1</chemicals>
+        <pharmaceuticals>1</pharmaceuticals>
+        <refining>1</refining>
+      </refiners>
+      <culture_worker weight="1">
+        <literature>1</literature>
+        <music>1</music>
+      </culture_worker>
+      <enforcer weight="1">
+        <cyber_security>1</cyber_security>
+      </enforcer>
+      <entertainer weight="1.1">
+        <holonet>1</holonet>
+        <music>1</music>
+        <cyber_entertainment>1</cyber_entertainment>
+        <tourism_complexes>1</tourism_complexes>
+      </entertainer>
+      <manager weight="1"></manager>
+      <healthcare weight="1">
+        <pharmaceuticals>1</pharmaceuticals>
+        <hospitals>1</hospitals>
+        <private_doctors>1</private_doctors>
+        <medical_research>1</medical_research>
+        <body_enancement>1</body_enancement>
+      </healthcare>
+      <foundry weight="1">
+        <refining>1</refining>
+        <heavy_manufacturing>1</heavy_manufacturing>
+        <naval_contracting>1</naval_contracting>
+        <land_contracting>1</land_contracting>
+      </foundry>
+      <researcher weight="1">
+        <electronics>1</electronics>
+        <toys_and_games>1</toys_and_games>
+        <medical_research>1</medical_research>
+        <universities>1</universities>
+        <pure_rnd>1</pure_rnd>
+      </researcher>
+    </jobs>
+  </middle_strata>
+  <low_strata weight="1">
+    <strata_industries>
+      <vehicles>1</vehicles>
+      <pmcs>1</pmcs>
+      <holonet>1</holonet>
+      <music>1</music>
+      <sports>1</sports>
+      <news>1</news>
+      <grocery_stores>1</grocery_stores>
+      <fast_food>1</fast_food>
+      <retail>1</retail>
+      <personal_devices>1</personal_devices>
+      <cyber_entertainment>1</cyber_entertainment>
+      <social_media>1</social_media>
+      <savings_loans>1</savings_loans>
+      <insurance>1</insurance>
+      <pharmaceuticals>1</pharmaceuticals>
+      <hospitals>1</hospitals>
+      <private_doctors>1</private_doctors>
+      <space_cruises>1</space_cruises>
+      <tourism_complexes>1</tourism_complexes>
+      <planetary_transportation>1</planetary_transportation>
+      <commercial_real_estate>1</commercial_real_estate>
+      <residential_real_estate>1</residential_real_estate>
+      <universities>1</universities>
+    </strata_industries>
+    <jobs>
+      <clerk weight="1">
+        <grocery_stores>1</grocery_stores>
+        <fast_food>1</fast_food>
+        <restaurants>1</restaurants>
+        <retail>1</retail>
+        <investment_equity>1</investment_equity>
+        <savings_loans>1</savings_loans>
+        <insurance>1</insurance>
+        <hotels>1</hotels>
+        <education_materials>1</education_materials>
+      </clerk>
+      <miner weight="1">
+        <mining>1</mining>
+      </miner>
+      <farmer weight="1">
+        <livestock>1</livestock>
+        <cash_crops>1</cash_crops>
+        <staple_foods>1</staple_foods>
+        <fishing>1</fishing>
+        <grocery_stores>1</grocery_stores>
+        <fast_food>1</fast_food>
+      </farmer>
+      <soldier weight="1">
+        <land_contracting>1</land_contracting>
+        <pmcs>1</pmcs>
+      </soldier>
+      <technician weight="1">
+        <energy>1</energy>
+        <electronics>1</electronics>
+      </technician>
+    </jobs>
+  </low_strata>
+</popdata> 
