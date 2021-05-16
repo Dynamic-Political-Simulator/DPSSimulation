@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
+using System.Linq;
 
 
 namespace DPSSimulation.Classes
@@ -24,6 +25,9 @@ namespace DPSSimulation.Classes
         public decimal Population { get; set; }
         public Dictionary<string, decimal> Output { get; set; } = new Dictionary<string, decimal>();
         public Data Data { get; set; }
+        //Popsim
+        public Dictionary<Group, float> PlanetGroups { get; set; } = new Dictionary<Group, float>(); //No idea how we will populate this but its propably fine
+        public Dictionary<Faction, float> PlanetFactions { get; set; } = new Dictionary<Faction, float>();
 
         public void PlanetSim ()
         {
@@ -111,6 +115,40 @@ namespace DPSSimulation.Classes
                     }   
                 }
             }
+        }
+        
+        public void CalculatePopularity()
+        {
+            Dictionary<Group, Dictionary<Faction,float>> PopularityByGroup = new Dictionary<Group, Dictionary<Faction, float>>();
+            foreach(KeyValuePair<Faction,float> Faction in PlanetFactions)
+            {
+                PlanetFactions[Faction.Key] = 0;
+            }
+
+            foreach (KeyValuePair<Group, float> Group in PlanetGroups)
+            {
+                PopularityByGroup.Add(Group.Key, CalculateGroupPopularity(Group.Key));
+                foreach(KeyValuePair<Faction,float> Faction in PopularityByGroup[Group.Key])
+                {
+                    PlanetFactions[Faction.Key] += Faction.Value * Group.Value;
+                } 
+            }
+            
+        }
+
+        public Dictionary<Faction, float> CalculateGroupPopularity(Group group)
+        {
+            Dictionary<Faction, float> Popularity = new Dictionary<Faction, float>();
+            Dictionary<Faction, float> Compatabilities = new Dictionary<Faction, float>();
+            foreach (KeyValuePair<Faction, float> Faction in PlanetFactions)
+            {
+                Compatabilities.Add(Faction.Key,Faction.Key.CalculcateCompatability(group));
+            }
+            foreach (KeyValuePair<Faction,float> Faction in Compatabilities)
+            {
+                Popularity.Add(Faction.Key, Faction.Value / Compatabilities.Sum(c => c.Value));
+            }
+            return Popularity;
         }
     }
 
