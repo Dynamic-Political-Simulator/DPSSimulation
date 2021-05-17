@@ -16,14 +16,12 @@ namespace DPSSimulation.Classes
         public float CalculcateCompatability(Group Group)
         {
             List<int> Compatabilities = new List<int>();
-            for(int x = 0; x < 2; x++)
+
+            foreach(KeyValuePair<string, int> Alignment in Alignment.Alignments)
             {
-                for (int y = 0; y < 9; y++)
-                {
-                    Compatabilities.Add(Alignment.Alignement[y, x] * Group.Alignment.Alignement[y, x] * 12 - ((Alignment.Alignement[y, x] - Group.Alignment.Alignement[y, x]) * 275));
-                }
-                
+                Compatabilities.Add(Alignment.Value * Group.Alignment.Alignments[Alignment.Key] * 12 - ((Alignment.Value - Group.Alignment.Alignments[Alignment.Key]) * 275));
             }
+
             float TotalCompatability = Compatabilities.Sum();
             float NegativeCompatabilities = Compatabilities.Where(c => c < 0).Sum();
             if(Establishment > Radicalisation)

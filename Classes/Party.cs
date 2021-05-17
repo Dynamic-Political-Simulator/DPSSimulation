@@ -4,8 +4,8 @@ using System.Text;
 
 namespace DPSSimulation.Classes
 {
-    public class PoliticalAlignment
+    public class Party
     {
-        public Dictionary<string, int> Alignments = new Dictionary<string, int>();
+
     }
 }

@@ -20,6 +20,9 @@ namespace DPSSimulation.Classes
         public List<Fleet> ResearchStations { get; set; } = new List<Fleet>();
         public Dictionary<string, decimal> NationalOutput { get; set; } = new Dictionary<string, decimal>();
         public InfraStructureData InfraStructureData { get; set; }
+        public Dictionary<Faction,int> GeneralAssembly { get; set; }
+        public Military Military { get; set; }
+
 
         public void OrganiseFleets()
         {
@@ -166,6 +169,59 @@ namespace DPSSimulation.Classes
                 }
             }
             return totalOutput;
+        }
+
+        public void SetParliament()
+        {
+            Dictionary<Planet,Dictionary<Faction, float>> FactionPopularities = new Dictionary<Planet, Dictionary<Faction, float>>();
+            Decimal TotalPopulation = 0;
+            
+            foreach(GalacticObject system in GalacticObjects)
+            {
+                foreach(Planet planet in system.Planets)
+                {
+                    if(planet.Pops.Count != 0)
+                    {
+                        
+                        planet.CalculatePopularity();
+                        TotalPopulation += planet.Population;
+                        Dictionary<Faction, float> PlanetFactions = planet.PlanetFactions;
+                        var Query = PlanetFactions.OrderBy(f => f.Value).Reverse();
+                        Dictionary<Faction, float> FinalFactions = new Dictionary<Faction, float>();
+                        float percentage = 0;
+                        foreach (KeyValuePair<Faction,float> Faction in Query)
+                        {
+                            if (percentage < 0.6)
+                            {
+                                percentage += Faction.Value;
+                                FinalFactions.Add(Faction.Key,Faction.Value);
+                            }
+                        }
+                        float total = FinalFactions.Sum(f => f.Value);
+                        foreach(KeyValuePair<Faction,float> Faction in FinalFactions)
+                        {
+                            FinalFactions[Faction.Key] = Faction.Value / total;
+                        }
+                        FactionPopularities.Add(planet, FinalFactions);
+                    }
+                }
+            }
+            foreach(KeyValuePair<Planet,Dictionary<Faction,float>> Planet in FactionPopularities)
+            {
+                float PopulationPercentage = (float)Decimal.Divide(Planet.Key.Population, TotalPopulation);
+                int seats = (int)(6000 * PopulationPercentage);
+                foreach(KeyValuePair<Faction,float> Faction in Planet.Value)
+                {
+                    if (GeneralAssembly.ContainsKey(Faction.Key))
+                    {
+                        GeneralAssembly[Faction.Key] += (int)(seats * Faction.Value);
+                    }
+                    else
+                    {
+                        GeneralAssembly.Add(Faction.Key, (int)(seats * Faction.Value));
+                    }
+                }
+            }
         }
     }
 }

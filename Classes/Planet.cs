@@ -127,7 +127,7 @@ namespace DPSSimulation.Classes
 
             foreach (KeyValuePair<Group, float> Group in PlanetGroups)
             {
-                PopularityByGroup.Add(Group.Key, CalculateGroupPopularity(Group.Key));
+                PopularityByGroup.Add(Group.Key, Group.Key.CalculateGroupPopularity(PlanetFactions.Keys.ToList()));
                 foreach(KeyValuePair<Faction,float> Faction in PopularityByGroup[Group.Key])
                 {
                     PlanetFactions[Faction.Key] += Faction.Value * Group.Value;
@@ -136,7 +136,7 @@ namespace DPSSimulation.Classes
             
         }
 
-        public Dictionary<Faction, float> CalculateGroupPopularity(Group group)
+        /*public Dictionary<Faction, float> CalculateGroupPopularity(Group group)
         {
             Dictionary<Faction, float> Popularity = new Dictionary<Faction, float>();
             Dictionary<Faction, float> Compatabilities = new Dictionary<Faction, float>();
@@ -149,7 +149,7 @@ namespace DPSSimulation.Classes
                 Popularity.Add(Faction.Key, Faction.Value / Compatabilities.Sum(c => c.Value));
             }
             return Popularity;
-        }
+        }*/
     }
 
 
