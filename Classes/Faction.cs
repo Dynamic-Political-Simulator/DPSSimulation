@@ -10,7 +10,6 @@ namespace DPSSimulation.Classes
         public string Name { get; set; }
         public List<string> Players { get; set; }
         public float Establishment { get; set; }
-        public float Radicalisation { get; set; }
         public PoliticalAlignment Alignment { get; set; }
 
         public float CalculcateCompatability(Group Group)
@@ -24,13 +23,13 @@ namespace DPSSimulation.Classes
 
             float TotalCompatability = Compatabilities.Sum();
             float NegativeCompatabilities = Compatabilities.Where(c => c < 0).Sum();
-            if(Establishment > Radicalisation)
+            if(Establishment > Group.Radicalisation)
             {
                 NegativeCompatabilities = (NegativeCompatabilities * 2) * Establishment;
             }
             else
             {
-                NegativeCompatabilities = (NegativeCompatabilities * 2) * Radicalisation;
+                NegativeCompatabilities = (NegativeCompatabilities * 2) * Group.Radicalisation;
             }
             TotalCompatability += NegativeCompatabilities;
 

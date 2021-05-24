@@ -22,8 +22,8 @@ namespace DPSSimulation.Classes
         public float Crime { get; set; }
         public float Migration { get; set; }
         //Simulation Data
-        public decimal Population { get; set; }
-        public Dictionary<string, decimal> Output { get; set; } = new Dictionary<string, decimal>();
+        public ulong Population { get; set; }
+        public Dictionary<string, ulong> Output { get; set; } = new Dictionary<string, ulong>();
         public Data Data { get; set; }
         //Popsim
         public Dictionary<Group, float> PlanetGroups { get; set; } = new Dictionary<Group, float>(); //No idea how we will populate this but its propably fine
@@ -35,7 +35,7 @@ namespace DPSSimulation.Classes
         }
         public void CalculatePopulation ()
         {
-            Population = (decimal)(Math.Floor(100000 * Math.Pow(Pops.Count,3.5)));
+            Population = (ulong)(Math.Floor(100000 * (decimal)Math.Pow(Pops.Count,3.5)));
         }
 
         public void ApplyPlanetaryData(Data data)
@@ -47,15 +47,15 @@ namespace DPSSimulation.Classes
         {
             CalculatePopulation();
            
-            decimal PopulationPerPop = (decimal)(Population / Pops.Count);
+            ulong PopulationPerPop = (Population / (ulong)Pops.Count);
             //High Strata
             
-            List<decimal> StrataPopulations = new List<decimal>();
-            StrataPopulations.Add(Pops.FindAll(p => p.Strata == "\"ruler\"").Count * PopulationPerPop);
-            StrataPopulations.Add(Pops.FindAll(p => p.Strata == "\"specialist\"").Count * PopulationPerPop);
-            StrataPopulations.Add(Pops.FindAll(p => p.Strata == "\"worker\"").Count * PopulationPerPop);
+            List<ulong> StrataPopulations = new List<ulong>();
+            StrataPopulations.Add((ulong)Pops.FindAll(p => p.Strata == "\"ruler\"").Count * PopulationPerPop);
+            StrataPopulations.Add((ulong)Pops.FindAll(p => p.Strata == "\"specialist\"").Count * PopulationPerPop);
+            StrataPopulations.Add((ulong)Pops.FindAll(p => p.Strata == "\"worker\"").Count * PopulationPerPop);
             CalculateStrataIndustriesOutput(StrataPopulations);
-            Dictionary<string, decimal> jobPopulations = new Dictionary<string, decimal>();
+            Dictionary<string, ulong> jobPopulations = new Dictionary<string, ulong>();
             foreach(Pop pop in Pops)
             {
                 if (pop.Job!= null)
@@ -75,7 +75,7 @@ namespace DPSSimulation.Classes
             
         }
 
-        public void CalculateStrataIndustriesOutput(List<decimal> StrataPopulations)
+        public void CalculateStrataIndustriesOutput(List<ulong> StrataPopulations)
         {
             for(int i = 0; i<StrataPopulations.Count; i++)
             {
@@ -83,17 +83,17 @@ namespace DPSSimulation.Classes
                 {
                     if (Output.ContainsKey(industry.Key))
                     {
-                        Output[industry.Key] += (decimal)((long)StrataPopulations[i] * Data.BaseGdpPerPop * Data.Stratas[i].StrataWeight * industry.Value * Data.GmData[i].StrataIndustries[industry.Key] / Data.Stratas[i].StrataIndustries.Count);
+                        Output[industry.Key] += (ulong)(StrataPopulations[i] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * industry.Value * Data.GmData[i].StrataIndustries[industry.Key] / Data.Stratas[i].StrataIndustries.Count);
                     }
                     else
                     {
-                        Output.Add(industry.Key, (decimal)((long)StrataPopulations[i] * Data.BaseGdpPerPop * Data.Stratas[i].StrataWeight * industry.Value * Data.GmData[i].StrataIndustries[industry.Key] / Data.Stratas[i].StrataIndustries.Count));
+                        Output.Add(industry.Key, (ulong)(StrataPopulations[i] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * industry.Value * Data.GmData[i].StrataIndustries[industry.Key] / Data.Stratas[i].StrataIndustries.Count));
                     }
                 }
             }
         }
 
-        public void CalculateStrataJobOutput(Dictionary<string,decimal> jobPopulations)
+        public void CalculateStrataJobOutput(Dictionary<string,ulong> jobPopulations)
         {
             for (int i = 0; i < Data.Stratas.Count; i++)
             {
@@ -105,11 +105,11 @@ namespace DPSSimulation.Classes
                         {
                             if (Output.ContainsKey(industry.Key))
                             {
-                                Output[industry.Key] += (decimal)((long)jobPopulations[job.Key] * Data.BaseGdpPerPop * Data.Stratas[i].StrataWeight * Data.Stratas[i].StrataJobs[job.Key].JobWeight * industry.Value * Data.GmData[i].StrataJobs[job.Key].JobIndustries[industry.Key] / Data.Stratas[i].StrataJobs[job.Key].JobIndustries.Count);
+                                Output[industry.Key] += (ulong)(jobPopulations[job.Key] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * Data.Stratas[i].StrataJobs[job.Key].JobWeight * industry.Value * Data.GmData[i].StrataJobs[job.Key].JobIndustries[industry.Key] / Data.Stratas[i].StrataJobs[job.Key].JobIndustries.Count);
                             }
                             else
                             {
-                                Output.Add(industry.Key, (decimal)((long)jobPopulations[job.Key] * Data.BaseGdpPerPop * Data.Stratas[i].StrataWeight * Data.Stratas[i].StrataJobs[job.Key].JobWeight * industry.Value * Data.GmData[i].StrataJobs[job.Key].JobIndustries[industry.Key] / Data.Stratas[i].StrataJobs[job.Key].JobIndustries.Count));
+                                Output.Add(industry.Key, (ulong)(jobPopulations[job.Key] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * Data.Stratas[i].StrataJobs[job.Key].JobWeight * industry.Value * Data.GmData[i].StrataJobs[job.Key].JobIndustries[industry.Key] / Data.Stratas[i].StrataJobs[job.Key].JobIndustries.Count));
                             }
                         }
                     }   
@@ -133,7 +133,6 @@ namespace DPSSimulation.Classes
                     PlanetFactions[Faction.Key] += Faction.Value * Group.Value;
                 } 
             }
-            
         }
 
         /*public Dictionary<Faction, float> CalculateGroupPopularity(Group group)

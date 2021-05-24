@@ -136,6 +136,7 @@ namespace DPSSimulation.Classes
 
         public Dictionary<string, decimal> GetGrossGDP()
         {
+            EmpireEcon();
             Dictionary<string, decimal> totalOutput = new Dictionary<string, decimal>();
             foreach (GalacticObject system in GalacticObjects)
             {
@@ -143,7 +144,7 @@ namespace DPSSimulation.Classes
                 {
                     if (planet.Population != 0)
                     {
-                        foreach (KeyValuePair<string, decimal> industry in planet.Output)
+                        foreach (KeyValuePair<string, ulong> industry in planet.Output)
                         {
                             if (totalOutput.ContainsKey(industry.Key))
                             {

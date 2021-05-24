@@ -8,6 +8,8 @@ namespace DPSSimulation.Classes
     public class Group
     {
         public string Name { get; set; }
+        public int PartyInvolvementFactor { get; set; }
+        public float Radicalisation { get; set; }
         public PoliticalAlignment Alignment { get; set; }
 
         public Dictionary<Faction, float> CalculateGroupPopularity(List<Faction> Factions)
