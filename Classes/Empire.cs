@@ -18,9 +18,10 @@ namespace DPSSimulation.Classes
         public List<Army> Armies { get; set; } = new List<Army>();
         public List<Fleet> MiningStations { get; set; } = new List<Fleet>();
         public List<Fleet> ResearchStations { get; set; } = new List<Fleet>();
-        public Dictionary<string, decimal> NationalOutput { get; set; } = new Dictionary<string, decimal>();
+        public Dictionary<string, ulong> NationalOutput { get; set; } = new Dictionary<string, ulong>();
         public InfraStructureData InfraStructureData { get; set; }
-        public Dictionary<Faction,int> GeneralAssembly { get; set; }
+        public Dictionary<string, float> GmData { get; set; } = new Dictionary<string, float>();
+        public Dictionary<Faction, int> GeneralAssembly { get; set; } = new Dictionary<Faction, int>();
         public Military Military { get; set; }
 
 
@@ -96,7 +97,7 @@ namespace DPSSimulation.Classes
                         districtAmount += planet.Districts.FindAll(d => d.Type == "\"district_city\"").Count;
                         luxuryresidenceAmount += planet.Buildings.FindAll(b => b.Type == "building_luxury_residence" && !b.ruined).Count;
                         luxuryresidenceAmount += planet.Buildings.FindAll(b => b.Type == "building_paradise_dome" && !b.ruined).Count;
-                        planet.CalculateEconomy();
+                        planet.CalculateEconomy(GmData);
                     }
                 }
                 if (system.Starbase.Level != "starbase_outpost")
@@ -122,22 +123,27 @@ namespace DPSSimulation.Classes
         {
             foreach (KeyValuePair<string, float> industry in InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries)
             {
+                float GmModifier = 1;
+                if (GmData.ContainsKey(industry.Key))
+                {
+                    GmModifier = GmData[industry.Key];
+                }
                 if (NationalOutput.ContainsKey(industry.Key))
                 {
-                    NationalOutput[industry.Key] += (decimal)(InfraStructureData.GdpPerInfrastructure*InfraStructureData.Infrastructures[infrastructureType].InfrastructureWeight* InfraStructureData.GmInfrastructures[infrastructureType].InfrastructureWeight*industry.Value*InfraStructureData.GmInfrastructures[infrastructureType].InfrastructureIndustries[industry.Key]*amount / InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries.Count);
+                    NationalOutput[industry.Key] += (ulong)(InfraStructureData.GdpPerInfrastructure*InfraStructureData.Infrastructures[infrastructureType].InfrastructureWeight*GmModifier*industry.Value*amount / InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries.Count);
                 }
                 else
                 {
-                    NationalOutput.Add(industry.Key, (decimal)(InfraStructureData.GdpPerInfrastructure * InfraStructureData.Infrastructures[infrastructureType].InfrastructureWeight * InfraStructureData.GmInfrastructures[infrastructureType].InfrastructureWeight * industry.Value * InfraStructureData.GmInfrastructures[infrastructureType].InfrastructureIndustries[industry.Key]*amount / InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries.Count));
+                    NationalOutput.Add(industry.Key, (ulong)(InfraStructureData.GdpPerInfrastructure * InfraStructureData.Infrastructures[infrastructureType].InfrastructureWeight * GmModifier * industry.Value *amount / InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries.Count));
                 }
             }
                 
         }
 
-        public Dictionary<string, decimal> GetGrossGDP()
+        public Dictionary<string, ulong> GetGrossGDP()
         {
             EmpireEcon();
-            Dictionary<string, decimal> totalOutput = new Dictionary<string, decimal>();
+            Dictionary<string, ulong> totalOutput = new Dictionary<string, ulong>();
             foreach (GalacticObject system in GalacticObjects)
             {
                 foreach (Planet planet in system.Planets)
@@ -158,7 +164,7 @@ namespace DPSSimulation.Classes
                     } 
                 }
             }
-            foreach (KeyValuePair<string, decimal> industry in NationalOutput)
+            foreach (KeyValuePair<string, ulong> industry in NationalOutput)
             {
                 if (totalOutput.ContainsKey(industry.Key))
                 {
@@ -175,7 +181,7 @@ namespace DPSSimulation.Classes
         public void SetParliament()
         {
             Dictionary<Planet,Dictionary<Faction, float>> FactionPopularities = new Dictionary<Planet, Dictionary<Faction, float>>();
-            Decimal TotalPopulation = 0;
+            ulong TotalPopulation = 0;
             
             foreach(GalacticObject system in GalacticObjects)
             {
@@ -209,7 +215,7 @@ namespace DPSSimulation.Classes
             }
             foreach(KeyValuePair<Planet,Dictionary<Faction,float>> Planet in FactionPopularities)
             {
-                float PopulationPercentage = (float)Decimal.Divide(Planet.Key.Population, TotalPopulation);
+                float PopulationPercentage = (float)(Planet.Key.Population / TotalPopulation);
                 int seats = (int)(6000 * PopulationPercentage);
                 foreach(KeyValuePair<Faction,float> Faction in Planet.Value)
                 {

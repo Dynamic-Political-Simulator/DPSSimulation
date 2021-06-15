@@ -25,6 +25,7 @@ namespace DPSSimulation.Classes
         public ulong Population { get; set; }
         public Dictionary<string, ulong> Output { get; set; } = new Dictionary<string, ulong>();
         public Data Data { get; set; }
+        public Dictionary<string, float> GmData { get; set; } = new Dictionary<string, float>();
         //Popsim
         public Dictionary<Group, float> PlanetGroups { get; set; } = new Dictionary<Group, float>(); //No idea how we will populate this but its propably fine
         public Dictionary<Faction, float> PlanetFactions { get; set; } = new Dictionary<Faction, float>();
@@ -43,7 +44,7 @@ namespace DPSSimulation.Classes
             Data = data;
         }
 
-        public void CalculateEconomy()
+        public void CalculateEconomy(Dictionary<string, float> EmpireModifiers)
         {
             CalculatePopulation();
            
@@ -54,7 +55,7 @@ namespace DPSSimulation.Classes
             StrataPopulations.Add((ulong)Pops.FindAll(p => p.Strata == "\"ruler\"").Count * PopulationPerPop);
             StrataPopulations.Add((ulong)Pops.FindAll(p => p.Strata == "\"specialist\"").Count * PopulationPerPop);
             StrataPopulations.Add((ulong)Pops.FindAll(p => p.Strata == "\"worker\"").Count * PopulationPerPop);
-            CalculateStrataIndustriesOutput(StrataPopulations);
+            CalculateStrataIndustriesOutput(StrataPopulations, EmpireModifiers);
             Dictionary<string, ulong> jobPopulations = new Dictionary<string, ulong>();
             foreach(Pop pop in Pops)
             {
@@ -71,29 +72,40 @@ namespace DPSSimulation.Classes
                 }
                 
             }
-            CalculateStrataJobOutput(jobPopulations);
+            CalculateStrataJobOutput(jobPopulations, EmpireModifiers);
             
         }
 
-        public void CalculateStrataIndustriesOutput(List<ulong> StrataPopulations)
+        public void CalculateStrataIndustriesOutput(List<ulong> StrataPopulations, Dictionary<string, float> EmpireModifiers)
         {
             for(int i = 0; i<StrataPopulations.Count; i++)
             {
                 foreach (KeyValuePair<string, float> industry in Data.Stratas[i].StrataIndustries)
                 {
+                    float GmModifier = 1;
+                    float EmpireModifier = 1;
+                    if (EmpireModifiers.ContainsKey(industry.Key))
+                    {
+                        EmpireModifier = EmpireModifiers[industry.Key];
+                    }
+                    if (GmData.ContainsKey(industry.Key))
+                    {
+                        GmModifier = GmData[industry.Key];
+                    }
+                    
                     if (Output.ContainsKey(industry.Key))
                     {
-                        Output[industry.Key] += (ulong)(StrataPopulations[i] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * industry.Value * Data.GmData[i].StrataIndustries[industry.Key] / Data.Stratas[i].StrataIndustries.Count);
+                        Output[industry.Key] += (ulong)(StrataPopulations[i] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * industry.Value * GmModifier * EmpireModifier / Data.Stratas[i].StrataIndustries.Count);
                     }
                     else
                     {
-                        Output.Add(industry.Key, (ulong)(StrataPopulations[i] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * industry.Value * Data.GmData[i].StrataIndustries[industry.Key] / Data.Stratas[i].StrataIndustries.Count));
+                        Output.Add(industry.Key, (ulong)(StrataPopulations[i] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * industry.Value * GmModifier * EmpireModifier / Data.Stratas[i].StrataIndustries.Count));
                     }
                 }
             }
         }
 
-        public void CalculateStrataJobOutput(Dictionary<string,ulong> jobPopulations)
+        public void CalculateStrataJobOutput(Dictionary<string,ulong> jobPopulations, Dictionary<string, float> EmpireModifiers)
         {
             for (int i = 0; i < Data.Stratas.Count; i++)
             {
@@ -103,13 +115,24 @@ namespace DPSSimulation.Classes
                     {
                         foreach (KeyValuePair<string, float> industry in Data.Stratas[i].StrataJobs[job.Key].JobIndustries)
                         {
+                            float GmModifier = 1;
+                            float EmpireModifier = 1;
+                            if (EmpireModifiers.ContainsKey(industry.Key))
+                            {
+                                EmpireModifier = EmpireModifiers[industry.Key];
+                            }
+                            if (GmData.ContainsKey(industry.Key))
+                            {
+                                GmModifier = GmData[industry.Key];
+                            }
+
                             if (Output.ContainsKey(industry.Key))
                             {
-                                Output[industry.Key] += (ulong)(jobPopulations[job.Key] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * Data.Stratas[i].StrataJobs[job.Key].JobWeight * industry.Value * Data.GmData[i].StrataJobs[job.Key].JobIndustries[industry.Key] / Data.Stratas[i].StrataJobs[job.Key].JobIndustries.Count);
+                                Output[industry.Key] += (ulong)(jobPopulations[job.Key] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * Data.Stratas[i].StrataJobs[job.Key].JobWeight * industry.Value * GmModifier * EmpireModifier / Data.Stratas[i].StrataJobs[job.Key].JobIndustries.Count);
                             }
                             else
                             {
-                                Output.Add(industry.Key, (ulong)(jobPopulations[job.Key] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * Data.Stratas[i].StrataJobs[job.Key].JobWeight * industry.Value * Data.GmData[i].StrataJobs[job.Key].JobIndustries[industry.Key] / Data.Stratas[i].StrataJobs[job.Key].JobIndustries.Count));
+                                Output.Add(industry.Key, (ulong)(jobPopulations[job.Key] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * Data.Stratas[i].StrataJobs[job.Key].JobWeight * industry.Value * GmModifier * EmpireModifier / Data.Stratas[i].StrataJobs[job.Key].JobIndustries.Count));
                             }
                         }
                     }   

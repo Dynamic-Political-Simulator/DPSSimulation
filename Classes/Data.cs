@@ -9,28 +9,15 @@ namespace DPSSimulation.Classes
     public class Data
     {
         public List<Strata> Stratas { get; set; } = new List<Strata>();
-        public List<Strata> GmData { get; set; } = new List<Strata>();
 
         public int BaseGdpPerPop { get; set; }
-        public Data()
+        public Data(XmlDocument IndustryData)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load("C:\\Users\\thoma\\source\\repos\\DPSSimulation\\DPSSimulation\\Data\\PopDistribution.xml");
-            XmlNode popdata = doc.DocumentElement.SelectSingleNode("/popdata");
+            XmlNode popdata = IndustryData.DocumentElement.SelectSingleNode("/popdata");
             BaseGdpPerPop = int.Parse(popdata.Attributes["weight"].InnerText);
             foreach (XmlNode strata in popdata.ChildNodes)
             {
                 Stratas.Add(new Strata(strata));
-            }
-
-            //temporary for testing
-            XmlDocument docGM = new XmlDocument();
-            docGM.Load("C:\\Users\\thoma\\source\\repos\\DPSSimulation\\DPSSimulation\\Data\\PopDistributionGM.xml");
-            XmlNode popdataGM = docGM.DocumentElement.SelectSingleNode("/popdata");
-            //BaseGdpPerPopGM = int.Parse(popdata.Attributes["weight"].InnerText);
-            foreach (XmlNode strata in popdataGM.ChildNodes)
-            {
-                GmData.Add(new Strata(strata));
             }
         }
     }

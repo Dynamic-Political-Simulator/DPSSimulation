@@ -8,32 +8,22 @@ namespace DPSSimulation.Classes
 {
     public class InfraStructureData
     {
-        public int GdpPerInfrastructure { get; set; }
+        public ulong GdpPerInfrastructure { get; set; }
         public Dictionary<string, Infrastructure> Infrastructures { get; set; } = new Dictionary<string, Infrastructure>();
-        public Dictionary<string, Infrastructure> GmInfrastructures { get; set; } = new Dictionary<string, Infrastructure>();
+        
 
-        public InfraStructureData()
+        public InfraStructureData(XmlDocument InfrastructureData)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load("C:\\Users\\thoma\\source\\repos\\DPSSimulation\\DPSSimulation\\Data\\EmpireDistribution.xml");
-            XmlNode infrastructureData = doc.DocumentElement.SelectSingleNode("/space_industry_data");
-            GdpPerInfrastructure = int.Parse(infrastructureData.Attributes["weight"].InnerText);
+            
+            XmlNode infrastructureData = InfrastructureData.DocumentElement.SelectSingleNode("/space_industry_data");
+            GdpPerInfrastructure = ulong.Parse(infrastructureData.Attributes["weight"].InnerText);
 
             foreach (XmlNode infrastructure in infrastructureData.ChildNodes)
             {
                Infrastructures.Add(infrastructure.Name, new Infrastructure(infrastructure));
             }
 
-            //Temporary for testing
-            XmlDocument docGM = new XmlDocument();
-            docGM.Load("C:\\Users\\thoma\\source\\repos\\DPSSimulation\\DPSSimulation\\Data\\EmpireDistributionGM.xml");
-            XmlNode infrastructureDataGM = docGM.DocumentElement.SelectSingleNode("/space_industry_data");
-            GdpPerInfrastructure = int.Parse(infrastructureData.Attributes["weight"].InnerText);
-
-            foreach (XmlNode infrastructure in infrastructureDataGM.ChildNodes)
-            {
-                GmInfrastructures.Add(infrastructure.Name, new Infrastructure(infrastructure));
-            }
+            
         }
     }
 
