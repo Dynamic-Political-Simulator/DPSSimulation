@@ -25,10 +25,11 @@ namespace DPSSimulation.Classes
         public ulong Population { get; set; }
         public Dictionary<string, ulong> Output { get; set; } = new Dictionary<string, ulong>();
         public Data Data { get; set; }
-        public Dictionary<string, float> GmData { get; set; } = new Dictionary<string, float>();
+        public Dictionary<string, float> EconGmData { get; set; } = new Dictionary<string, float>();
         //Popsim
         public Dictionary<Group, float> PlanetGroups { get; set; } = new Dictionary<Group, float>(); //No idea how we will populate this but its propably fine
         public Dictionary<Faction, float> PlanetFactions { get; set; } = new Dictionary<Faction, float>();
+        public Dictionary<Group, Dictionary<Faction, float>> PopsimGmData = new Dictionary<Group, Dictionary<Faction, float>>();
 
         public void PlanetSim ()
         {
@@ -36,7 +37,11 @@ namespace DPSSimulation.Classes
         }
         public void CalculatePopulation ()
         {
-            Population = (ulong)(Math.Floor(100000 * (decimal)Math.Pow(Pops.Count,3.5)));
+            //Population = (ulong)(Math.Floor(100000 * (decimal)Math.Pow(Pops.Count,3.5))); FUCK YOU REV AND SKELLY THIS IS COOL!
+            var rand = new Random();
+            long ranndom = rand.Next(-10000000, 10000000);
+            long population = Convert.ToInt64((250000000 * (decimal)Pops.Count()) + rand.Next(-10000000, 10000000));
+            Population = (ulong)((250000000 * (decimal)Pops.Count())+rand.Next(-100000,10000000));
         }
 
         public void ApplyPlanetaryData(Data data)
@@ -88,9 +93,9 @@ namespace DPSSimulation.Classes
                     {
                         EmpireModifier = EmpireModifiers[industry.Key];
                     }
-                    if (GmData.ContainsKey(industry.Key))
+                    if (EconGmData.ContainsKey(industry.Key))
                     {
-                        GmModifier = GmData[industry.Key];
+                        GmModifier = EconGmData[industry.Key];
                     }
                     
                     if (Output.ContainsKey(industry.Key))
@@ -121,9 +126,9 @@ namespace DPSSimulation.Classes
                             {
                                 EmpireModifier = EmpireModifiers[industry.Key];
                             }
-                            if (GmData.ContainsKey(industry.Key))
+                            if (EconGmData.ContainsKey(industry.Key))
                             {
-                                GmModifier = GmData[industry.Key];
+                                GmModifier = EconGmData[industry.Key];
                             }
 
                             if (Output.ContainsKey(industry.Key))
@@ -140,7 +145,7 @@ namespace DPSSimulation.Classes
             }
         }
         
-        public void CalculatePopularity()
+        public void CalculatePopularity(Dictionary<Group, Dictionary<Faction, float>> EmpirePopsimGmData)
         {
             Dictionary<Group, Dictionary<Faction,float>> PopularityByGroup = new Dictionary<Group, Dictionary<Faction, float>>();
             foreach(KeyValuePair<Faction,float> Faction in PlanetFactions)
@@ -150,7 +155,10 @@ namespace DPSSimulation.Classes
 
             foreach (KeyValuePair<Group, float> Group in PlanetGroups)
             {
-                PopularityByGroup.Add(Group.Key, Group.Key.CalculateGroupPopularity(PlanetFactions.Keys.ToList()));
+                var CombinedGmData = EmpirePopsimGmData[Group.Key].Concat(PopsimGmData[Group.Key])
+                   .GroupBy(x => x.Key)
+                   .ToDictionary(x => x.Key, x => x.Sum(y => y.Value));
+                PopularityByGroup.Add(Group.Key, Group.Key.CalculateGroupPopularity(PlanetFactions.Keys.ToList(),CombinedGmData));
                 foreach(KeyValuePair<Faction,float> Faction in PopularityByGroup[Group.Key])
                 {
                     PlanetFactions[Faction.Key] += Faction.Value * Group.Value;

@@ -74,16 +74,23 @@ namespace DPSSimulation.Classes
                     x++;
                     while (!saveLines[x].StartsWith("}"))
                     {
-                        var building = readBuildings(saveLines[x..(x + 2)]);
-                        
-                        if (!saveLines[x + 2].StartsWith("\t}"))
+                        if (saveLines[x].Split("=")[1] == "none")
                         {
-                            Console.WriteLine(saveLines[x + 2]);
-                            building.ruined = true;
                             x++;
+
+                            Console.WriteLine($"Jumped Building of Size None");
+                            continue;
                         }
+                        var buildingstart = x;
+                        while (!saveLines[x].StartsWith("\t}"))
+                        {
+                            x++;
+
+                        }
+                        var building = readBuildings(saveLines[buildingstart..x]);
+                        
                         _Map.Buildings.Add(building);
-                        x+=3;
+                        x++;
                     }
                     
                 }
@@ -484,11 +491,16 @@ namespace DPSSimulation.Classes
 
         public Building readBuildings(string[] lines)
         {
-            return new Building()
+            var building = new Building()
             {
                 BuildingGameId = int.Parse(lines[0].Split('=')[0]),
                 Type = lines[1].Split('=')[1]
             };
+            if (lines.Contains("ruined"))
+            {
+                building.ruined = true;
+            }
+            return building;
             
         }
 

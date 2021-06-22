@@ -20,9 +20,10 @@ namespace DPSSimulation.Classes
         public List<Fleet> ResearchStations { get; set; } = new List<Fleet>();
         public Dictionary<string, ulong> NationalOutput { get; set; } = new Dictionary<string, ulong>();
         public InfraStructureData InfraStructureData { get; set; }
-        public Dictionary<string, float> GmData { get; set; } = new Dictionary<string, float>();
+        public Dictionary<string, float> EconGmData { get; set; } = new Dictionary<string, float>();
         public Dictionary<Faction, int> GeneralAssembly { get; set; } = new Dictionary<Faction, int>();
         public Military Military { get; set; }
+        public Dictionary<Group, Dictionary<Faction, float>> PopsimGmData { get; set; } = new Dictionary<Group, Dictionary<Faction, float>>();
 
 
         public void OrganiseFleets()
@@ -97,7 +98,7 @@ namespace DPSSimulation.Classes
                         districtAmount += planet.Districts.FindAll(d => d.Type == "\"district_city\"").Count;
                         luxuryresidenceAmount += planet.Buildings.FindAll(b => b.Type == "building_luxury_residence" && !b.ruined).Count;
                         luxuryresidenceAmount += planet.Buildings.FindAll(b => b.Type == "building_paradise_dome" && !b.ruined).Count;
-                        planet.CalculateEconomy(GmData);
+                        planet.CalculateEconomy(EconGmData);
                     }
                 }
                 if (system.Starbase.Level != "starbase_outpost")
@@ -124,9 +125,9 @@ namespace DPSSimulation.Classes
             foreach (KeyValuePair<string, float> industry in InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries)
             {
                 float GmModifier = 1;
-                if (GmData.ContainsKey(industry.Key))
+                if (EconGmData.ContainsKey(industry.Key))
                 {
-                    GmModifier = GmData[industry.Key];
+                    GmModifier = EconGmData[industry.Key];
                 }
                 if (NationalOutput.ContainsKey(industry.Key))
                 {
@@ -190,7 +191,7 @@ namespace DPSSimulation.Classes
                     if(planet.Pops.Count != 0)
                     {
                         
-                        planet.CalculatePopularity();
+                        planet.CalculatePopularity(PopsimGmData);
                         TotalPopulation += planet.Population;
                         Dictionary<Faction, float> PlanetFactions = planet.PlanetFactions;
                         var Query = PlanetFactions.OrderBy(f => f.Value).Reverse();
@@ -229,6 +230,42 @@ namespace DPSSimulation.Classes
                     }
                 }
             }
+        }
+        public Dictionary<Faction,float> CalculateGlobalPopularity()
+        {
+            Dictionary<Faction, float> GlobalPopularity = new Dictionary<Faction, float>();
+            Dictionary<Planet, Dictionary<Faction, float>> FactionPopularities = new Dictionary<Planet, Dictionary<Faction, float>>();
+            ulong TotalPopulation = 0;
+            foreach (GalacticObject system in GalacticObjects)
+            {
+                foreach (Planet planet in system.Planets)
+                {
+                    if (planet.Pops.Count != 0)
+                    {
+
+                        planet.CalculatePopularity(PopsimGmData);
+                        TotalPopulation += planet.Population;
+                        FactionPopularities.Add(planet, planet.PlanetFactions);
+                    }
+                }
+            }
+            foreach (KeyValuePair<Planet, Dictionary<Faction, float>> Planet in FactionPopularities)
+            {
+                float PopulationPercentage = (float)(Planet.Key.Population / TotalPopulation);
+                foreach (KeyValuePair<Faction, float> Faction in Planet.Value)
+                {
+                    if (GlobalPopularity.ContainsKey(Faction.Key))
+                    {
+                        GlobalPopularity[Faction.Key] += (int)(PopulationPercentage * Faction.Value);
+                    }
+                    else
+                    {
+                        GlobalPopularity.Add(Faction.Key, (int)(PopulationPercentage * Faction.Value));
+                    }
+                }
+            }
+
+            return GlobalPopularity;
         }
     }
 }
