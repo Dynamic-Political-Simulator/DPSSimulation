@@ -33,28 +33,85 @@ namespace DPSSimulation.Classes
             int galacticObjectPos = 0;
             int shippos = 0;
             int fleetpos = 0;
-            int starbasepos = 0;
             
+            Dictionary<int, string> species = new Dictionary<int, string>();
+
             for (int x = 0; x < saveLines.Length; x++)
             {
+                if (saveLines[x].StartsWith("species_db={"))
+                {
+                    x++;
+                    
+                    while (!saveLines[x].StartsWith("}"))
+                    {
+                        var speciesstart = x;
+                        if (saveLines[speciesstart].Split("=")[1] == "none")
+                        {
+                            Console.WriteLine($"Jumped Pop of Size None");
+                            x++;
+                            continue;
+                        }
+                        else
+                        {
+
+                            int id = int.Parse(saveLines[speciesstart].Split("=")[0]);
+                            string name = "";
+                            while (!saveLines[x].StartsWith("\t}"))
+                            {
+                                if (saveLines[x].StartsWith("\t\tname="))
+                                {
+                                    name = saveLines[x].Split("=")[1];
+                                }
+                                x++;
+
+                            }
+                            x++;
+
+
+
+
+
+                            species.Add(id, name);
+
+                            Console.WriteLine($"Added Species {name}");
+                        }
+
+
+                    }
+                }
                 if (saveLines[x].StartsWith("pop={"))
                 {
                     x++;
+                    
                     while (!saveLines[x].StartsWith("}"))
                     {
                         var popstart = x;
-                        while (!saveLines[x].StartsWith("\t}"))
+                        if (saveLines[popstart].Split("=")[1] == "none")
                         {
+                            Console.WriteLine($"Jumped Pop of Size None");
                             x++;
-                          
+                            continue;
                         }
-                        x++;
-                        var pop = readPop(saveLines[popstart..x]);
+                        else
+                        {
+                            
+
+                            while (!saveLines[x].StartsWith("\t}"))
+                            {
+                                x++;
+
+                            }
+                            x++;
+
+                            var pop = readPop(saveLines[popstart..x],species);
+
+
+                            pops.Add(pop);
+
+
+                            Console.WriteLine($"Added Pop {pop.PopGameId}");
+                        }
                         
-                        
-                        pops.Add(pop);
-                        
-                        Console.WriteLine($"Added Pop {pop.PopGameId}");
 
                     }
                     
@@ -101,16 +158,26 @@ namespace DPSSimulation.Classes
                     while (!saveLines[x].StartsWith("}"))
                     {
                         var countrystart = x;
-                        while (!saveLines[x].StartsWith("\t}"))
+                        if (saveLines[countrystart].Split("=")[1] == "none")
                         {
+                            Console.WriteLine($"Jumped Country of Size None");
+                            x++;
+                            continue;
+                        }
+                        else
+                        {
+                            while (!saveLines[x].StartsWith("\t}"))
+                            {
+                                x++;
+                            }
+                            var country = readEmpire(saveLines[countrystart..x]);
+                            _Map.Empires.Add(country);
+
+                            Console.WriteLine($"Added Empire {country.Name}");
+
                             x++;
                         }
-                        var country = readEmpire(saveLines[countrystart..x]);
-                        _Map.Empires.Add(country);
-
-                        Console.WriteLine($"Added Empire {country.Name}");
-
-                        x++;
+                        
                     }
                 }
                 else if (saveLines[x].StartsWith("ships={"))
@@ -185,12 +252,17 @@ namespace DPSSimulation.Classes
                         x++;
                     }
                 }
-             
-
             }
 
+            for (int x = 0; x < saveLines.Length; x++)
+            {
+                if (saveLines[x].StartsWith("planets={"))
+                {
+                    //save planet position
+                    planetPos = x;
+                }
+            }
 
-            
             //jump to planet position
             int y = planetPos;
             
@@ -348,7 +420,7 @@ namespace DPSSimulation.Classes
 
             return starbase;
         }
-        public Pop readPop(string[] lines)
+        public Pop readPop(string[] lines,Dictionary<int,string>species)
         {
 
             var pop = new Pop() { 
@@ -404,6 +476,19 @@ namespace DPSSimulation.Classes
                 else if (line.StartsWith("\t\thappiness"))
                 {
                     pop.Hapiness = float.Parse(line.Split('=')[1], CultureInfo.InvariantCulture);
+                }
+                else if (line.StartsWith("\t\tspecies="))
+                {
+                    int speciesId = int.Parse(line.Split("=")[1]);
+                    pop.Species = species[speciesId];
+                }
+                if(pop.Strata == null)
+                {
+                    pop.Strata = "none";
+                }
+                if(pop.Job == null)
+                {
+                    pop.Job = "none";
                 }
             }
 

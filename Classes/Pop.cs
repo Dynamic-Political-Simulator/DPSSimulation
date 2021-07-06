@@ -10,6 +10,7 @@ namespace DPSSimulation.Classes
         public int PopGameId { get; set; }
         public int SpeciesId { get; set; }
         public string Ethos { get; set; }
+        public string Species { get; set; }
         public string Job { get; set; }
         public string Strata { get; set; }
         public int Planet { get; set; }

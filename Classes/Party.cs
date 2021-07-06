@@ -14,9 +14,9 @@ namespace DPSSimulation.Classes
         public Dictionary<Faction, float> LowerPartyAffinity { get; set; } = new Dictionary<Faction, float>();
         public float UpperPartyPercentage { get; set; }
         
-        public void SetPopGroupEnlistment(Dictionary<Group, int> GroupsAndJeremy) //Needs Groups with associated weights
+        public void SetPopGroupEnlistment(Dictionary<Group, float> GroupsAndJeremy) //Needs Groups with associated weights
         {
-            foreach(KeyValuePair<Group, int> GroupJeremy in GroupsAndJeremy)
+            foreach(KeyValuePair<Group, float> GroupJeremy in GroupsAndJeremy)
             {
                 if (PopGroupEnlistment.ContainsKey(GroupJeremy.Key))
                 {
@@ -60,7 +60,7 @@ namespace DPSSimulation.Classes
             return GroupPercentageOfParty;
         }
 
-        public void PartyUpperAndLowerCalculation(Dictionary<Faction,int> FactionsAndJeremyUpper, Dictionary<Faction, int> FactionsAndJeremyLower, ulong Population, Dictionary<Group, float> GroupsAndSizes)
+        public void PartyUpperAndLowerCalculation(Dictionary<Faction,float> FactionsAndJeremyUpper, Dictionary<Faction, float> FactionsAndJeremyLower, ulong Population, Dictionary<Group, float> GroupsAndSizes)
         {
             //-------------------------------------------------------------------------------------------------
             //------------Setting Memmbership------------------------------------------------------------------
@@ -116,7 +116,7 @@ namespace DPSSimulation.Classes
 
             //Upper Party Factions
             Dictionary<Faction, float> UpperAffinity = new Dictionary<Faction, float>();
-            foreach(KeyValuePair<Faction, int> FactionAndJeremy in FactionsAndJeremyUpper)
+            foreach(KeyValuePair<Faction, float> FactionAndJeremy in FactionsAndJeremyUpper)
             {
                 List<float> Compatabilities = new List<float>();
                 foreach (KeyValuePair<Group, float> Group in UpperPartyMembership)
@@ -144,7 +144,7 @@ namespace DPSSimulation.Classes
             }
             //lower Party Factions
             Dictionary<Faction, float> LowerAffinity = new Dictionary<Faction, float>();
-            foreach (KeyValuePair<Faction, int> FactionAndJeremy in FactionsAndJeremyLower)
+            foreach (KeyValuePair<Faction, float> FactionAndJeremy in FactionsAndJeremyLower)
             {
                 List<float> Compatabilities = new List<float>();
                 foreach (KeyValuePair<Group, float> Group in LowerPartyMembership)

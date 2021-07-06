@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <space_industry_data weight="100000000">
-  <city_districts weight ="5">
+  <city_districts weight ="50">
     <commercial_real_estate>1</commercial_real_estate>
     <residential_real_estate>2</residential_real_estate>
   </city_districts>
@@ -12,15 +12,15 @@
   </mining_stations>
   <stations weight ="10">
     <recreational_shipbuilding>0.3</recreational_shipbuilding>
-    <cargo_shipbuilding>0.3</cargo_shipbuilding>
-    <extraterrestrial_construction>1</extraterrestrial_construction>
+    <cargo_shipbuilding>4000</cargo_shipbuilding>
+    <extraterrestrial_construction>5000</extraterrestrial_construction>
     <space_cruises>1.2</space_cruises>
-    <space_flights>1.5</space_flights>
+    <space_flight>10</space_flight>
   </stations>
-  <shipyards weight="7.5">
+  <shipyards weight="5">
     <recreational_shipbuilding>0.5</recreational_shipbuilding>
-    <cargo_shipbuilding>5</cargo_shipbuilding>
-    <military_shipbuilding>3</military_shipbuilding>
+    <cargo_shipbuilding>3000</cargo_shipbuilding>
+    <military_shipbuilding>5000</military_shipbuilding>
     <naval_contracting>0.6</naval_contracting>
     <space_cruises>0.7</space_cruises>
   </shipyards>

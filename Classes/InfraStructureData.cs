@@ -25,6 +25,11 @@ namespace DPSSimulation.Classes
 
             
         }
+
+        public InfraStructureData()
+        {
+
+        }
     }
 
     public class Infrastructure

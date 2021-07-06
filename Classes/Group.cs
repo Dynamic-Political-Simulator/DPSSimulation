@@ -7,6 +7,7 @@ namespace DPSSimulation.Classes
 {
     public class Group
     {
+        public string GroupId { get; set; }
         public string Name { get; set; }
         public int PartyInvolvementFactor { get; set; }
         public float Radicalisation { get; set; }

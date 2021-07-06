@@ -20,6 +20,11 @@ namespace DPSSimulation.Classes
                 Stratas.Add(new Strata(strata));
             }
         }
+
+        public Data()
+        {
+
+        }
     }
 
     public class Strata

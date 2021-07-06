@@ -179,6 +179,42 @@ namespace DPSSimulation.Classes
             return totalOutput;
         }
 
+        public Dictionary<string,float> GetGlobalStrataOutput()
+        {
+            Dictionary<string, float> StrataOutput = new Dictionary<string, float>();
+            int planetNum = 0;
+            foreach (GalacticObject system in GalacticObjects)
+            {
+                foreach (Planet planet in system.Planets)
+                {
+                    if (planet.Population != 0)
+                    {
+                        planetNum++;
+                        Dictionary<string, float> PlanetStrata = planet.OutputStrataGDP(EconGmData);
+
+                        foreach (KeyValuePair<string, float> industry in PlanetStrata)
+                        {
+                            if (StrataOutput.ContainsKey(industry.Key))
+                            {
+                                StrataOutput[industry.Key] += industry.Value;
+                            }
+                            else
+                            {
+                                StrataOutput.Add(industry.Key, industry.Value);
+                            }
+                        }
+                    }
+                }
+            }
+            Dictionary<string, float> FinalOutput = new Dictionary<string, float>();
+            foreach(KeyValuePair<string,float> strata in StrataOutput)
+            {
+                FinalOutput.Add(strata.Key, strata.Value / planetNum);
+            }
+            return FinalOutput;
+
+        }
+
         public void SetParliament()
         {
             Dictionary<Planet,Dictionary<Faction, float>> FactionPopularities = new Dictionary<Planet, Dictionary<Faction, float>>();
@@ -256,16 +292,73 @@ namespace DPSSimulation.Classes
                 {
                     if (GlobalPopularity.ContainsKey(Faction.Key))
                     {
-                        GlobalPopularity[Faction.Key] += (int)(PopulationPercentage * Faction.Value);
+                        GlobalPopularity[Faction.Key] += (PopulationPercentage * Faction.Value);
                     }
                     else
                     {
-                        GlobalPopularity.Add(Faction.Key, (int)(PopulationPercentage * Faction.Value));
+                        GlobalPopularity.Add(Faction.Key, (PopulationPercentage * Faction.Value));
                     }
                 }
             }
 
             return GlobalPopularity;
+        }
+
+        public Dictionary<Group,float> CalculateGlobalGroupSize()
+        {
+            Dictionary<Planet, Dictionary<Group, float>> GroupSizeByPlanet = new Dictionary<Planet, Dictionary<Group, float>>();
+            ulong TotalPopulation = 0;
+            foreach (GalacticObject system in GalacticObjects)
+            {
+                foreach (Planet planet in system.Planets)
+                {
+                    if (planet.Pops.Count != 0)
+                    {
+
+                        planet.CalculatePopularity(PopsimGmData);
+                        TotalPopulation += planet.Population;
+                        GroupSizeByPlanet.Add(planet, planet.PlanetGroups);
+                    }
+                }
+            }
+            Dictionary<Group, float> GroupSize = new Dictionary<Group, float>();
+            foreach(KeyValuePair<Planet, Dictionary<Group, float>> planet in GroupSizeByPlanet)
+            {
+                float PopulationPercentage = (float)(planet.Key.Population / TotalPopulation);
+
+                foreach(KeyValuePair<Group, float> group in planet.Value)
+                {
+                    if (GroupSize.ContainsKey(group.Key))
+                    {
+                        GroupSize[group.Key] += (PopulationPercentage * group.Value);
+                    }
+                    else
+                    {
+                        GroupSize.Add(group.Key, (PopulationPercentage * group.Value));
+                    }
+                }
+            }
+
+            return GroupSize;
+        }
+
+        public ulong GetGlobalPopulation()
+        {
+            ulong TotalPopulation = 0;
+            foreach (GalacticObject system in GalacticObjects)
+            {
+                foreach (Planet planet in system.Planets)
+                {
+                    if (planet.Pops.Count != 0)
+                    {
+
+                        planet.CalculatePopulation();
+                        TotalPopulation += planet.Population;
+                    }
+                }
+            }
+
+            return TotalPopulation;
         }
     }
 }

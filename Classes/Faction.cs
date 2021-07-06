@@ -7,6 +7,7 @@ namespace DPSSimulation.Classes
 {
     public class Faction
     {
+        public string FactionId { get; set; }
         public string Name { get; set; }
         public List<string> Players { get; set; }
         public float Establishment { get; set; }
