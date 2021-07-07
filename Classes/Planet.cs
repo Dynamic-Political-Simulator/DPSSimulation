@@ -263,18 +263,18 @@ namespace DPSSimulation.Classes
         public void CalculatePopularity(Dictionary<Group, Dictionary<Faction, float>> EmpirePopsimGmData)
         {
             Dictionary<Group, Dictionary<Faction,float>> PopularityByGroup = new Dictionary<Group, Dictionary<Faction, float>>();
-            foreach(KeyValuePair<Faction,float> Faction in PlanetFactions)
-            {
-                PlanetFactions[Faction.Key] = 0;
+            for(int i = 0; i < PlanetFactions.Keys.Count; i++) {
+                PlanetFactions[PlanetFactions.Keys.ElementAt(i)] = 0;
             }
 
             foreach (KeyValuePair<Group, float> Group in PlanetGroups)
             {
                 Group DataKey = EmpirePopsimGmData.Keys.FirstOrDefault(g => g.Name == Group.Key.Name);
+                Group DataKey2 = PopsimGmData.Keys.FirstOrDefault(g => g.Name == Group.Key.Name);
                 Dictionary<Faction, float> CombinedGmData = new Dictionary<Faction, float>();
-                if (DataKey != null)
+                if (DataKey != null && DataKey2 != null)
                 {
-                    CombinedGmData = EmpirePopsimGmData[DataKey].Concat(PopsimGmData[Group.Key])
+                    CombinedGmData = EmpirePopsimGmData[DataKey].Concat(PopsimGmData[DataKey2])
                    .GroupBy(x => x.Key)
                    .ToDictionary(x => x.Key, x => x.Sum(y => y.Value));
                 }

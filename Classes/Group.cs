@@ -35,10 +35,8 @@ namespace DPSSimulation.Classes
                 }
             }
             var popularitysum = Popularity.Sum(p => p.Value);
-            foreach (KeyValuePair<Faction, float> Faction in Popularity)
-            {
-                Popularity[Faction.Key] = Popularity[Faction.Key] / popularitysum;
-
+            for(int i = 0; i < Popularity.Keys.Count; i++) {
+                Popularity[Popularity.Keys.ElementAt(i)] = Popularity[Popularity.Keys.ElementAt(i)] / popularitysum;
             }
             return Popularity;
         }
