@@ -84,6 +84,7 @@ namespace DPSSimulation.Classes
         }
         public void EmpireEcon()
         {
+            NationalOutput = new Dictionary<string, ulong>();
             int districtAmount = 0;
             int starbaseAmount = 0;
             int shipyardAmount = 0;

@@ -52,7 +52,7 @@ namespace DPSSimulation.Classes
         public void CalculateEconomy(Dictionary<string, float> EmpireModifiers)
         {
             CalculatePopulation();
-           
+            Output = new Dictionary<string, ulong>();
             ulong PopulationPerPop = (Population / (ulong)Pops.Count);
             //High Strata
             Console.WriteLine(Name);

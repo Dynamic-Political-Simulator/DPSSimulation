@@ -23,7 +23,7 @@
       <insurance>1</insurance>
       <hospitals>0.9</hospitals>
       <private_doctors>2</private_doctors>
-      <body_enhancements>2.5</body_enhancements>
+      <body_enhancement>2.5</body_enhancement>
       <hotels>1</hotels>
       <tourism_complexes>1</tourism_complexes>
       <space_flight>1</space_flight>
@@ -109,7 +109,7 @@
         <hospitals>1.8</hospitals>
         <private_doctors>1.8</private_doctors>
         <medical_research>0.8</medical_research>
-        <body_enancement>0.2</body_enancement>
+        <body_enhancement>0.2</body_enhancement>
       </healthcare>
       <foundry weight="0.8">
         <refining>1.5</refining>
