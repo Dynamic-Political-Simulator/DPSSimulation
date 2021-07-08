@@ -243,11 +243,12 @@ namespace DPSSimulation.Classes
                             }
                         }
                         float total = FinalFactions.Sum(f => f.Value);
-                        foreach(KeyValuePair<Faction,float> Faction in FinalFactions)
+                        Dictionary<Faction, float> FinalestFactions = new Dictionary<Faction, float>();
+                        foreach (KeyValuePair<Faction,float> Faction in FinalFactions)
                         {
-                            FinalFactions[Faction.Key] = Faction.Value / total;
+                            FinalestFactions.Add(Faction.Key, Faction.Value / total);
                         }
-                        FactionPopularities.Add(planet, FinalFactions);
+                        FactionPopularities.Add(planet, FinalestFactions);
                     }
                 }
             }
@@ -257,9 +258,11 @@ namespace DPSSimulation.Classes
                 int seats = (int)(6000 * PopulationPercentage);
                 foreach(KeyValuePair<Faction,float> Faction in Planet.Value)
                 {
-                    if (GeneralAssembly.ContainsKey(Faction.Key))
+                    Faction help = GeneralAssembly.FirstOrDefault(f => f.Key.FactionId == Faction.Key.FactionId).Key;
+                    if (help != null)
                     {
-                        GeneralAssembly[Faction.Key] += (int)(seats * Faction.Value);
+                        GeneralAssembly[help] += (int)(seats * Faction.Value);
+                        
                     }
                     else
                     {
@@ -291,9 +294,10 @@ namespace DPSSimulation.Classes
                 float PopulationPercentage = (float)(Planet.Key.Population / TotalPopulation);
                 foreach (KeyValuePair<Faction, float> Faction in Planet.Value)
                 {
-                    if (GlobalPopularity.ContainsKey(Faction.Key))
+                    Faction help = GlobalPopularity.FirstOrDefault(f => f.Key.FactionId == Faction.Key.FactionId).Key;
+                    if (help != null )
                     {
-                        GlobalPopularity[Faction.Key] += (PopulationPercentage * Faction.Value);
+                        GlobalPopularity[help] += (PopulationPercentage * Faction.Value);
                     }
                     else
                     {
