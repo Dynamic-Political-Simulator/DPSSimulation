@@ -30,18 +30,19 @@ namespace DPSSimulation.Classes
         public Dictionary<Group, float> PlanetGroups { get; set; } = new Dictionary<Group, float>(); //No idea how we will populate this but its propably fine
         public Dictionary<Faction, float> PlanetFactions { get; set; } = new Dictionary<Faction, float>();
         public Dictionary<Group, Dictionary<Faction, float>> PopsimGmData = new Dictionary<Group, Dictionary<Faction, float>>();
+        public Dictionary<Faction, float> GlobalAlignment = new Dictionary<Faction, float>();
 
-        public void PlanetSim ()
+        public void PlanetSim()
         {
             CalculatePopulation();
         }
-        public void CalculatePopulation ()
+        public void CalculatePopulation()
         {
             //Population = (ulong)(Math.Floor(100000 * (decimal)Math.Pow(Pops.Count,3.5))); FUCK YOU REV AND SKELLY THIS IS COOL!
             var rand = new Random();
             long ranndom = rand.Next(-10000000, 10000000);
             long population = Convert.ToInt64((250000000 * (decimal)Pops.Count()) + rand.Next(-10000000, 10000000));
-            Population = (ulong)((250000000 * (decimal)Pops.Count())+rand.Next(-100000,10000000));
+            Population = (ulong)((250000000 * (decimal)Pops.Count()) + rand.Next(-100000, 10000000));
         }
 
         public void ApplyPlanetaryData(Data data)
@@ -62,9 +63,9 @@ namespace DPSSimulation.Classes
             StrataPopulations.Add((ulong)Pops.FindAll(p => p.Strata == "\"worker\"").Count * PopulationPerPop);
             CalculateStrataIndustriesOutput(StrataPopulations, EmpireModifiers);
             Dictionary<string, ulong> jobPopulations = new Dictionary<string, ulong>();
-            foreach(Pop pop in Pops)
+            foreach (Pop pop in Pops)
             {
-                if (pop.Job!= null)
+                if (pop.Job != null)
                 {
                     if (jobPopulations.ContainsKey(pop.Job))
                     {
@@ -75,16 +76,16 @@ namespace DPSSimulation.Classes
                         jobPopulations.Add(pop.Job, PopulationPerPop);
                     }
                 }
-                
+
             }
             CalculateStrataJobOutput(jobPopulations, EmpireModifiers);
-            
+
         }
 
         public void CalculateStrataIndustriesOutput(List<ulong> StrataPopulations, Dictionary<string, float> EmpireModifiers)
         {
-            
-            for(int i = 0; i<StrataPopulations.Count; i++)
+
+            for (int i = 0; i < StrataPopulations.Count; i++)
             {
                 foreach (KeyValuePair<string, float> industry in Data.Stratas[i].StrataIndustries)
                 {
@@ -98,7 +99,7 @@ namespace DPSSimulation.Classes
                     {
                         GmModifier = EconGmData[industry.Key];
                     }
-                    
+
                     if (Output.ContainsKey(industry.Key))
                     {
                         Output[industry.Key] += (ulong)(StrataPopulations[i] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * industry.Value * GmModifier * EmpireModifier / Data.Stratas[i].StrataIndustries.Count);
@@ -107,15 +108,15 @@ namespace DPSSimulation.Classes
                     {
                         Output.Add(industry.Key, (ulong)(StrataPopulations[i] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * industry.Value * GmModifier * EmpireModifier / Data.Stratas[i].StrataIndustries.Count));
                     }
-                    
+
                 }
             }
-            
+
         }
 
-        public void CalculateStrataJobOutput(Dictionary<string,ulong> jobPopulations, Dictionary<string, float> EmpireModifiers)
+        public void CalculateStrataJobOutput(Dictionary<string, ulong> jobPopulations, Dictionary<string, float> EmpireModifiers)
         {
-            
+
             for (int i = 0; i < Data.Stratas.Count; i++)
             {
                 foreach (KeyValuePair<string, Job> job in Data.Stratas[i].StrataJobs)
@@ -143,16 +144,16 @@ namespace DPSSimulation.Classes
                             {
                                 Output.Add(industry.Key, (ulong)(jobPopulations[job.Key] * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[i].StrataWeight * Data.Stratas[i].StrataJobs[job.Key].JobWeight * industry.Value * GmModifier * EmpireModifier / Data.Stratas[i].StrataJobs[job.Key].JobIndustries.Count));
                             }
-                            
+
                         }
-                    }   
+                    }
                 }
             }
-            
+
         }
 
-        
-        
+
+
         public Dictionary<string, float> OutputStrataGDP(Dictionary<string, float> EmpireModifiers)
         {
             CalculatePopulation();
@@ -163,39 +164,39 @@ namespace DPSSimulation.Classes
             List<Pop> ruler = Pops.FindAll(p => p.Strata == "\"ruler\"");
             List<Pop> specialist = Pops.FindAll(p => p.Strata == "\"specialist\"");
             List<Pop> worker = Pops.FindAll(p => p.Strata == "\"worker\"");
-            Dictionary<string,ulong> popAmount = new Dictionary<string, ulong>();
-            popAmount.Add("ruler",(ulong)ruler.Count * PopulationPerPop);
-            popAmount.Add("specialist",(ulong)specialist.Count * PopulationPerPop);
-            popAmount.Add("worker",(ulong)worker.Count * PopulationPerPop);
+            Dictionary<string, ulong> popAmount = new Dictionary<string, ulong>();
+            popAmount.Add("ruler", (ulong)ruler.Count * PopulationPerPop);
+            popAmount.Add("specialist", (ulong)specialist.Count * PopulationPerPop);
+            popAmount.Add("worker", (ulong)worker.Count * PopulationPerPop);
             ulong Output1 = 0;
             int x = 0;
-            foreach(KeyValuePair<string,ulong> size in popAmount)
+            foreach (KeyValuePair<string, ulong> size in popAmount)
             {
                 Output1 = 0;
-                
-                    foreach (KeyValuePair<string, float> industry in Data.Stratas[x].StrataIndustries)
-                    {
-                        float GmModifier = 1;
-                        float EmpireModifier = 1;
-                        if (EmpireModifiers.ContainsKey(industry.Key))
-                        {
-                            EmpireModifier = EmpireModifiers[industry.Key];
-                        }
-                        if (EconGmData.ContainsKey(industry.Key))
-                        {
-                            GmModifier = EconGmData[industry.Key];
-                        }
 
-                        Output1 += (ulong)(size.Value * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[x].StrataWeight * industry.Value * GmModifier * EmpireModifier / Data.Stratas[x].StrataIndustries.Count);
+                foreach (KeyValuePair<string, float> industry in Data.Stratas[x].StrataIndustries)
+                {
+                    float GmModifier = 1;
+                    float EmpireModifier = 1;
+                    if (EmpireModifiers.ContainsKey(industry.Key))
+                    {
+                        EmpireModifier = EmpireModifiers[industry.Key];
                     }
+                    if (EconGmData.ContainsKey(industry.Key))
+                    {
+                        GmModifier = EconGmData[industry.Key];
+                    }
+
+                    Output1 += (ulong)(size.Value * (ulong)Data.BaseGdpPerPop * (ulong)Data.Stratas[x].StrataWeight * industry.Value * GmModifier * EmpireModifier / Data.Stratas[x].StrataIndustries.Count);
+                }
                 x++;
                 float OutputPerCapita = 0;
                 if (size.Value != 0)
                 {
                     OutputPerCapita = Output1 / size.Value;
                 }
-                
-                StrataOutput.Add(size.Key, OutputPerCapita); 
+
+                StrataOutput.Add(size.Key, OutputPerCapita);
             }
             if (popAmount["ruler"] != 0)
             {
@@ -209,9 +210,9 @@ namespace DPSSimulation.Classes
             {
                 StrataOutput["worker"] += PerStrataJobStuff(worker, EmpireModifiers, PopulationPerPop, 2) / popAmount["worker"];
             }
-            
-            
-            
+
+
+
 
             return StrataOutput;
         }
@@ -225,11 +226,11 @@ namespace DPSSimulation.Classes
                 {
                     if (jobPopulations.ContainsKey(pop.Job))
                     {
-                       jobPopulations[pop.Job] += PopulationPerPop;
+                        jobPopulations[pop.Job] += PopulationPerPop;
                     }
                     else
                     {
-                       jobPopulations.Add(pop.Job, PopulationPerPop);
+                        jobPopulations.Add(pop.Job, PopulationPerPop);
                     }
                 }
 
@@ -262,8 +263,9 @@ namespace DPSSimulation.Classes
 
         public void CalculatePopularity(Dictionary<Group, Dictionary<Faction, float>> EmpirePopsimGmData)
         {
-            Dictionary<Group, Dictionary<Faction,float>> PopularityByGroup = new Dictionary<Group, Dictionary<Faction, float>>();
-            for(int i = 0; i < PlanetFactions.Keys.Count; i++) {
+            Dictionary<Group, Dictionary<Faction, float>> PopularityByGroup = new Dictionary<Group, Dictionary<Faction, float>>();
+            for (int i = 0; i < PlanetFactions.Keys.Count; i++)
+            {
                 PlanetFactions[PlanetFactions.Keys.ElementAt(i)] = 0;
             }
 
@@ -272,18 +274,43 @@ namespace DPSSimulation.Classes
                 Group DataKey = EmpirePopsimGmData.Keys.FirstOrDefault(g => g.Name == Group.Key.Name);
                 Group DataKey2 = PopsimGmData.Keys.FirstOrDefault(g => g.Name == Group.Key.Name);
                 Dictionary<Faction, float> CombinedGmData = new Dictionary<Faction, float>();
-                if (DataKey != null && DataKey2 != null)
+                if (DataKey != null)
                 {
-                    CombinedGmData = EmpirePopsimGmData[DataKey].Concat(PopsimGmData[DataKey2])
-                   .GroupBy(x => x.Key)
-                   .ToDictionary(x => x.Key, x => x.Sum(y => y.Value));
+                    CombinedGmData = EmpirePopsimGmData[DataKey];
                 }
-                
-                PopularityByGroup.Add(Group.Key, Group.Key.CalculateGroupPopularity(PlanetFactions.Keys.ToList(),CombinedGmData));
-                foreach(KeyValuePair<Faction,float> Faction in PopularityByGroup[Group.Key])
+
+                if (DataKey2 != null)
+                {
+                    foreach (KeyValuePair<Faction, float> kvp in PopsimGmData[DataKey2])
+                    {
+                        if (CombinedGmData.ContainsKey(kvp.Key))
+                        {
+                            CombinedGmData[kvp.Key] += kvp.Value;
+                        }
+                        else
+                        {
+                            CombinedGmData.Add(kvp.Key, kvp.Value);
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<Faction, float> kvp in GlobalAlignment)
+                {
+                    if (CombinedGmData.ContainsKey(kvp.Key))
+                    {
+                        CombinedGmData[kvp.Key] += kvp.Value;
+                    }
+                    else
+                    {
+                        CombinedGmData.Add(kvp.Key, kvp.Value);
+                    }
+                }
+
+                PopularityByGroup.Add(Group.Key, Group.Key.CalculateGroupPopularity(PlanetFactions.Keys.ToList(), CombinedGmData));
+                foreach (KeyValuePair<Faction, float> Faction in PopularityByGroup[Group.Key])
                 {
                     PlanetFactions[Faction.Key] += Faction.Value * Group.Value;
-                } 
+                }
             }
         }
 

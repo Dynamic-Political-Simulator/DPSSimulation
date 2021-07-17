@@ -29,36 +29,36 @@ namespace DPSSimulation.Classes
         public void OrganiseFleets()
         {
             List<Fleet> starbases = new List<Fleet>();
-           
+
             foreach (Fleet fleet in Fleets)
             {
 
                 if (fleet.Ships.FirstOrDefault(s => s.Type == "\"research_station\"") != null)
                 {
-                    
+
                     ResearchStations.Add(fleet);
-                    
+
                 }
 
                 if (fleet.Ships.FirstOrDefault(s => s.Type == "\"mining_station\"") != null)
                 {
                     MiningStations.Add(fleet);
-                    
+
                 }
 
-                
+
                 if (fleet.Ships.FirstOrDefault(s => s.Type.StartsWith("\"starbase")) != null)
                 {
-                    if (GalacticObjects.FirstOrDefault(g => g.GalacticObjectGameId == fleet.System)!= null) //if this is null it means the starbase is occupied rn. And I just am not gonna care YOLO
+                    if (GalacticObjects.FirstOrDefault(g => g.GalacticObjectGameId == fleet.System) != null) //if this is null it means the starbase is occupied rn. And I just am not gonna care YOLO
                     {
                         GalacticObjects.FirstOrDefault(g => g.GalacticObjectGameId == fleet.System).Starbase.StarbaseFleet = fleet;
                         Console.WriteLine();
                     }
-                    
+
                     starbases.Add(fleet);
                 }
 
-               
+
             }
 
 
@@ -118,7 +118,7 @@ namespace DPSSimulation.Classes
             //Mining Stations
             CalculcateInfrastructureOutput("mining_stations", MiningStations.Count);
             //stations
-            
+
         }
 
         public void CalculcateInfrastructureOutput(string infrastructureType, int amount)
@@ -132,14 +132,14 @@ namespace DPSSimulation.Classes
                 }
                 if (NationalOutput.ContainsKey(industry.Key))
                 {
-                    NationalOutput[industry.Key] += (ulong)(InfraStructureData.GdpPerInfrastructure*InfraStructureData.Infrastructures[infrastructureType].InfrastructureWeight*GmModifier*industry.Value*amount / InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries.Count);
+                    NationalOutput[industry.Key] += (ulong)(InfraStructureData.GdpPerInfrastructure * InfraStructureData.Infrastructures[infrastructureType].InfrastructureWeight * GmModifier * industry.Value * amount / InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries.Count);
                 }
                 else
                 {
-                    NationalOutput.Add(industry.Key, (ulong)(InfraStructureData.GdpPerInfrastructure * InfraStructureData.Infrastructures[infrastructureType].InfrastructureWeight * GmModifier * industry.Value *amount / InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries.Count));
+                    NationalOutput.Add(industry.Key, (ulong)(InfraStructureData.GdpPerInfrastructure * InfraStructureData.Infrastructures[infrastructureType].InfrastructureWeight * GmModifier * industry.Value * amount / InfraStructureData.Infrastructures[infrastructureType].InfrastructureIndustries.Count));
                 }
             }
-                
+
         }
 
         public Dictionary<string, ulong> GetGrossGDP()
@@ -163,7 +163,7 @@ namespace DPSSimulation.Classes
                                 totalOutput.Add(industry.Key, industry.Value);
                             }
                         }
-                    } 
+                    }
                 }
             }
             foreach (KeyValuePair<string, ulong> industry in NationalOutput)
@@ -180,7 +180,7 @@ namespace DPSSimulation.Classes
             return totalOutput;
         }
 
-        public Dictionary<string,float> GetGlobalStrataOutput()
+        public Dictionary<string, float> GetGlobalStrataOutput()
         {
             Dictionary<string, float> StrataOutput = new Dictionary<string, float>();
             int planetNum = 0;
@@ -208,7 +208,7 @@ namespace DPSSimulation.Classes
                 }
             }
             Dictionary<string, float> FinalOutput = new Dictionary<string, float>();
-            foreach(KeyValuePair<string,float> strata in StrataOutput)
+            foreach (KeyValuePair<string, float> strata in StrataOutput)
             {
                 FinalOutput.Add(strata.Key, strata.Value / planetNum);
             }
@@ -218,33 +218,33 @@ namespace DPSSimulation.Classes
 
         public void SetParliament()
         {
-            Dictionary<Planet,Dictionary<Faction, float>> FactionPopularities = new Dictionary<Planet, Dictionary<Faction, float>>();
+            Dictionary<Planet, Dictionary<Faction, float>> FactionPopularities = new Dictionary<Planet, Dictionary<Faction, float>>();
             ulong TotalPopulation = 0;
-            
-            foreach(GalacticObject system in GalacticObjects)
+
+            foreach (GalacticObject system in GalacticObjects)
             {
-                foreach(Planet planet in system.Planets)
+                foreach (Planet planet in system.Planets)
                 {
-                    if(planet.Pops.Count != 0)
+                    if (planet.Pops.Count != 0)
                     {
-                        
+
                         planet.CalculatePopularity(PopsimGmData);
                         TotalPopulation += planet.Population;
                         Dictionary<Faction, float> PlanetFactions = planet.PlanetFactions;
                         var Query = PlanetFactions.OrderBy(f => f.Value).Reverse();
                         Dictionary<Faction, float> FinalFactions = new Dictionary<Faction, float>();
                         float percentage = 0;
-                        foreach (KeyValuePair<Faction,float> Faction in Query)
+                        foreach (KeyValuePair<Faction, float> Faction in Query)
                         {
-                            if (percentage < 0.6)
+                            if (percentage < 1)
                             {
                                 percentage += Faction.Value;
-                                FinalFactions.Add(Faction.Key,Faction.Value);
+                                FinalFactions.Add(Faction.Key, Faction.Value);
                             }
                         }
                         float total = FinalFactions.Sum(f => f.Value);
                         Dictionary<Faction, float> FinalestFactions = new Dictionary<Faction, float>();
-                        foreach (KeyValuePair<Faction,float> Faction in FinalFactions)
+                        foreach (KeyValuePair<Faction, float> Faction in FinalFactions)
                         {
                             FinalestFactions.Add(Faction.Key, Faction.Value / total);
                         }
@@ -252,17 +252,17 @@ namespace DPSSimulation.Classes
                     }
                 }
             }
-            foreach(KeyValuePair<Planet,Dictionary<Faction,float>> Planet in FactionPopularities)
+            foreach (KeyValuePair<Planet, Dictionary<Faction, float>> Planet in FactionPopularities)
             {
-                float PopulationPercentage = (float)(Planet.Key.Population / TotalPopulation);
+                float PopulationPercentage = (Planet.Key.Population / (float)TotalPopulation);
                 int seats = (int)(6000 * PopulationPercentage);
-                foreach(KeyValuePair<Faction,float> Faction in Planet.Value)
+                foreach (KeyValuePair<Faction, float> Faction in Planet.Value)
                 {
                     Faction help = GeneralAssembly.FirstOrDefault(f => f.Key.FactionId == Faction.Key.FactionId).Key;
                     if (help != null)
                     {
                         GeneralAssembly[help] += (int)(seats * Faction.Value);
-                        
+
                     }
                     else
                     {
@@ -271,7 +271,7 @@ namespace DPSSimulation.Classes
                 }
             }
         }
-        public Dictionary<Faction,float> CalculateGlobalPopularity()
+        public Dictionary<Faction, float> CalculateGlobalPopularity()
         {
             Dictionary<Faction, float> GlobalPopularity = new Dictionary<Faction, float>();
             Dictionary<Planet, Dictionary<Faction, float>> FactionPopularities = new Dictionary<Planet, Dictionary<Faction, float>>();
@@ -291,11 +291,11 @@ namespace DPSSimulation.Classes
             }
             foreach (KeyValuePair<Planet, Dictionary<Faction, float>> Planet in FactionPopularities)
             {
-                float PopulationPercentage = (float)(Planet.Key.Population / TotalPopulation);
+                float PopulationPercentage = (Planet.Key.Population / (float)TotalPopulation);
                 foreach (KeyValuePair<Faction, float> Faction in Planet.Value)
                 {
                     Faction help = GlobalPopularity.FirstOrDefault(f => f.Key.FactionId == Faction.Key.FactionId).Key;
-                    if (help != null )
+                    if (help != null)
                     {
                         GlobalPopularity[help] += (PopulationPercentage * Faction.Value);
                     }
@@ -309,7 +309,7 @@ namespace DPSSimulation.Classes
             return GlobalPopularity;
         }
 
-        public Dictionary<Group,float> CalculateGlobalGroupSize()
+        public Dictionary<Group, float> CalculateGlobalGroupSize()
         {
             Dictionary<Planet, Dictionary<Group, float>> GroupSizeByPlanet = new Dictionary<Planet, Dictionary<Group, float>>();
             ulong TotalPopulation = 0;
@@ -327,11 +327,11 @@ namespace DPSSimulation.Classes
                 }
             }
             Dictionary<Group, float> GroupSize = new Dictionary<Group, float>();
-            foreach(KeyValuePair<Planet, Dictionary<Group, float>> planet in GroupSizeByPlanet)
+            foreach (KeyValuePair<Planet, Dictionary<Group, float>> planet in GroupSizeByPlanet)
             {
-                float PopulationPercentage = (float)(planet.Key.Population / TotalPopulation);
+                float PopulationPercentage = (planet.Key.Population / (float)TotalPopulation);
 
-                foreach(KeyValuePair<Group, float> group in planet.Value)
+                foreach (KeyValuePair<Group, float> group in planet.Value)
                 {
                     if (GroupSize.ContainsKey(group.Key))
                     {

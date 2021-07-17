@@ -17,14 +17,14 @@ namespace DPSSimulation.Classes
         {
             List<int> Compatabilities = new List<int>();
 
-            foreach(KeyValuePair<string, int> Alignment in Alignment.Alignments)
+            foreach (KeyValuePair<string, int> Alignment in Alignment.Alignments)
             {
                 Compatabilities.Add(Alignment.Value * Group.Alignment.Alignments[Alignment.Key] * 12 - ((Alignment.Value - Group.Alignment.Alignments[Alignment.Key]) * 275));
             }
 
             float TotalCompatability = Compatabilities.Sum();
             float NegativeCompatabilities = Compatabilities.Where(c => c < 0).Sum();
-            if(Establishment > Group.Radicalisation)
+            if (Establishment > Group.Radicalisation)
             {
                 NegativeCompatabilities = (NegativeCompatabilities * 2) * Establishment;
             }
@@ -39,8 +39,45 @@ namespace DPSSimulation.Classes
                 TotalCompatability = 300 * Establishment;
             }
 
-            
+
             return TotalCompatability;
+        }
+
+        public static bool operator ==(Faction a, Faction b)
+        {
+            if ((a is null && !(b is null)) || (!(a is null) && b is null)) return false;
+            if (a is null && b is null) return true;
+            return a.FactionId == b.FactionId;
+        }
+
+        public static bool operator !=(Faction a, Faction b)
+        {
+            if ((a is null && !(b is null)) || (!(a is null) && b is null)) return !false;
+            if (a is null && b is null) return !true;
+            return a.FactionId != b.FactionId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            //
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return this.FactionId == ((Faction)obj).FactionId;
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return this.FactionId.GetHashCode();
         }
     }
 }
