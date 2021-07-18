@@ -261,7 +261,7 @@ namespace DPSSimulation.Classes
             return Ouput;
         }
 
-        public void CalculatePopularity(Dictionary<Group, Dictionary<Faction, float>> EmpirePopsimGmData)
+        public void CalculatePopularity(Dictionary<Group, Dictionary<Faction, float>> EmpirePopsimGmData, Dictionary<Faction, float> GlobalAlign)
         {
             Dictionary<Group, Dictionary<Faction, float>> PopularityByGroup = new Dictionary<Group, Dictionary<Faction, float>>();
             for (int i = 0; i < PlanetFactions.Keys.Count; i++)
@@ -274,9 +274,20 @@ namespace DPSSimulation.Classes
                 Group DataKey = EmpirePopsimGmData.Keys.FirstOrDefault(g => g.Name == Group.Key.Name);
                 Group DataKey2 = PopsimGmData.Keys.FirstOrDefault(g => g.Name == Group.Key.Name);
                 Dictionary<Faction, float> CombinedGmData = new Dictionary<Faction, float>();
+                CombinedGmData.Clear();
                 if (DataKey != null)
                 {
-                    CombinedGmData = EmpirePopsimGmData[DataKey];
+                    foreach (KeyValuePair<Faction, float> kvp in EmpirePopsimGmData[DataKey])
+                    {
+                        if (CombinedGmData.ContainsKey(kvp.Key))
+                        {
+                            CombinedGmData[kvp.Key] += kvp.Value;
+                        }
+                        else
+                        {
+                            CombinedGmData.Add(kvp.Key, kvp.Value);
+                        }
+                    }
                 }
 
                 if (DataKey2 != null)
@@ -305,6 +316,23 @@ namespace DPSSimulation.Classes
                         CombinedGmData.Add(kvp.Key, kvp.Value);
                     }
                 }
+
+                foreach (KeyValuePair<Faction, float> kvp in GlobalAlign)
+                {
+                    if (CombinedGmData.ContainsKey(kvp.Key))
+                    {
+                        CombinedGmData[kvp.Key] += kvp.Value;
+                    }
+                    else
+                    {
+                        CombinedGmData.Add(kvp.Key, kvp.Value);
+                    }
+                }
+
+                // foreach (KeyValuePair<Faction, float> kvp in CombinedGmData)
+                // {
+                //     Console.WriteLine(kvp.Key.Name + ": " + kvp.Value);
+                // }
 
                 PopularityByGroup.Add(Group.Key, Group.Key.CalculateGroupPopularity(PlanetFactions.Keys.ToList(), CombinedGmData));
                 foreach (KeyValuePair<Faction, float> Faction in PopularityByGroup[Group.Key])

@@ -24,6 +24,7 @@ namespace DPSSimulation.Classes
         public Dictionary<Faction, int> GeneralAssembly { get; set; } = new Dictionary<Faction, int>();
         public Military Military { get; set; }
         public Dictionary<Group, Dictionary<Faction, float>> PopsimGmData { get; set; } = new Dictionary<Group, Dictionary<Faction, float>>();
+        public Dictionary<Faction, float> GlobalAlignment { get; set; } = new Dictionary<Faction, float>();
 
 
         public void OrganiseFleets()
@@ -228,7 +229,7 @@ namespace DPSSimulation.Classes
                     if (planet.Pops.Count != 0)
                     {
 
-                        planet.CalculatePopularity(PopsimGmData);
+                        planet.CalculatePopularity(PopsimGmData, GlobalAlignment);
                         TotalPopulation += planet.Population;
                         Dictionary<Faction, float> PlanetFactions = planet.PlanetFactions;
                         var Query = PlanetFactions.OrderBy(f => f.Value).Reverse();
@@ -283,7 +284,7 @@ namespace DPSSimulation.Classes
                     if (planet.Pops.Count != 0)
                     {
 
-                        planet.CalculatePopularity(PopsimGmData);
+                        planet.CalculatePopularity(PopsimGmData, GlobalAlignment);
                         TotalPopulation += planet.Population;
                         FactionPopularities.Add(planet, planet.PlanetFactions);
                     }
@@ -320,7 +321,7 @@ namespace DPSSimulation.Classes
                     if (planet.Pops.Count != 0)
                     {
 
-                        planet.CalculatePopularity(PopsimGmData);
+                        planet.CalculatePopularity(PopsimGmData, GlobalAlignment);
                         TotalPopulation += planet.Population;
                         GroupSizeByPlanet.Add(planet, planet.PlanetGroups);
                     }

@@ -13,7 +13,7 @@ namespace DPSSimulation.Classes
         public float Radicalisation { get; set; }
         public PoliticalAlignment Alignment { get; set; }
 
-        public Dictionary<Faction, float> CalculateGroupPopularity(List<Faction> Factions, Dictionary<Faction,float> GmPopsimData)
+        public Dictionary<Faction, float> CalculateGroupPopularity(List<Faction> Factions, Dictionary<Faction, float> GmPopsimData)
         {
             Dictionary<Faction, float> Popularity = new Dictionary<Faction, float>();
             Dictionary<Faction, float> Compatabilities = new Dictionary<Faction, float>();
@@ -28,14 +28,15 @@ namespace DPSSimulation.Classes
                 {
                     Popularity[Faction.Key] = Popularity[Faction.Key] + ((float)0.005 * Popularity[Faction.Key] * GmPopsimData[Faction.Key]) + ((float)0.08 * GmPopsimData[Faction.Key]);
                 }
-                
+
                 if (Popularity[Faction.Key] < 0)
                 {
-                    Popularity[Faction.Key]=0;
+                    Popularity[Faction.Key] = 0;
                 }
             }
             var popularitysum = Popularity.Sum(p => p.Value);
-            for(int i = 0; i < Popularity.Keys.Count; i++) {
+            for (int i = 0; i < Popularity.Keys.Count; i++)
+            {
                 Popularity[Popularity.Keys.ElementAt(i)] = Popularity[Popularity.Keys.ElementAt(i)] / popularitysum;
             }
             return Popularity;
