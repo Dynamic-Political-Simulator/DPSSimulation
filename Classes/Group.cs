@@ -26,7 +26,7 @@ namespace DPSSimulation.Classes
                 Popularity.Add(Faction.Key, Faction.Value / Compatabilities.Sum(c => c.Value));
                 if (GmPopsimData.ContainsKey(Faction.Key))
                 {
-                    Popularity[Faction.Key] = Popularity[Faction.Key] + ((float)0.005 * Popularity[Faction.Key] * GmPopsimData[Faction.Key]) + ((float)0.08 * GmPopsimData[Faction.Key]);
+                    Popularity[Faction.Key] = Popularity[Faction.Key] + ((float)0.075 * Popularity[Faction.Key] * GmPopsimData[Faction.Key]) + ((float)0.015 * GmPopsimData[Faction.Key]);
                 }
 
                 if (Popularity[Faction.Key] < 0)
