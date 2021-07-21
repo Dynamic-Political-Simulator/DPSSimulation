@@ -366,5 +366,11 @@ namespace DPSSimulation.Classes
 
             return TotalPopulation;
         }
+
+        public float GetBranchPopularity(Branch b)
+        {
+            Dictionary<Group, float> GroupPopularities = CalculateGlobalGroupSize();
+            return b.CalculateBranchPopularity(GroupPopularities);
+        }
     }
 }
