@@ -11,6 +11,7 @@ namespace DPSSimulation.Classes
         public string Name { get; set; }
         public Faction PerceivedAlignment { get; set; }
         public Dictionary<Group, float> Modifiers { get; set; }
+        public float NationalMod { get; set; }
 
         public float CalculateBranchPopularity(Dictionary<Group, float> Groups)
         {
@@ -20,13 +21,16 @@ namespace DPSSimulation.Classes
                 baseCompatabilities.Add(g, PerceivedAlignment.CalculcateCompatability(g));
             }
             Dictionary<Group, float> popularities = new Dictionary<Group, float>();
+            float mod = this.NationalMod;
             foreach (KeyValuePair<Group, float> kvp in baseCompatabilities)
             {
                 float popularity = kvp.Value / baseCompatabilities.Values.Max();
                 if (Modifiers.ContainsKey(kvp.Key))
                 {
-                    popularity = popularity + ((float)0.075 * popularity * Modifiers[kvp.Key]) + ((float)0.015 * Modifiers[kvp.Key]);
+                    mod += Modifiers[kvp.Key];
                 }
+
+                popularity = popularity + ((float)0.075 * popularity * mod) + ((float)0.015 * mod);
 
                 if (popularity < 0)
                 {
