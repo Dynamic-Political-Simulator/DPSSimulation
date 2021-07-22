@@ -16,23 +16,25 @@ namespace DPSSimulation.Classes
         public float CalculcateCompatability(Group Group)
         {
             List<int> Compatabilities = new List<int>();
-
             foreach (KeyValuePair<string, int> Alignment in Alignment.Alignments)
             {
-                Compatabilities.Add(Alignment.Value * Group.Alignment.Alignments[Alignment.Key] * 12 - ((Alignment.Value - Group.Alignment.Alignments[Alignment.Key]) * 275));
+                int h = ((Alignment.Value * Group.Alignment.Alignments[Alignment.Key] * 12) - ((Alignment.Value - Group.Alignment.Alignments[Alignment.Key]) * 275));
+                Console.WriteLine(Alignment.Key + ": " + h);
+                Console.WriteLine("-");
+                Compatabilities.Add((Alignment.Value * Group.Alignment.Alignments[Alignment.Key] * 12) - ((Alignment.Value - Group.Alignment.Alignments[Alignment.Key]) * 275));
             }
 
             float TotalCompatability = Compatabilities.Sum();
-            float NegativeCompatabilities = Compatabilities.Where(c => c < 0).Sum();
+            float NegativeCompatabilities = Compatabilities.Where(c => c < 0).Sum() * 2;
+            TotalCompatability += NegativeCompatabilities;
             if (Establishment > Group.Radicalisation)
             {
-                NegativeCompatabilities = (NegativeCompatabilities * 2) * Establishment;
+                TotalCompatability *= (1 + Establishment);
             }
             else
             {
-                NegativeCompatabilities = (NegativeCompatabilities * 2) * Group.Radicalisation;
+                TotalCompatability *= (1 + Group.Radicalisation);
             }
-            TotalCompatability += NegativeCompatabilities;
 
             if (TotalCompatability < 300 * Establishment)
             {

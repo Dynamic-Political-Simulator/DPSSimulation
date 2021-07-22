@@ -18,13 +18,17 @@ namespace DPSSimulation.Classes
             Dictionary<Group, float> baseCompatabilities = new Dictionary<Group, float>();
             foreach (Group g in Groups.Keys)
             {
-                baseCompatabilities.Add(g, PerceivedAlignment.CalculcateCompatability(g));
+                float ass = PerceivedAlignment.CalculcateCompatability(g); // WTF, why it 225 all the time??
+                baseCompatabilities.Add(g, ass);
+                // Console.WriteLine("---");
+                // Console.WriteLine(g.Name);
+                // Console.WriteLine("Base:" + ass);
             }
             Dictionary<Group, float> popularities = new Dictionary<Group, float>();
-            float mod = this.NationalMod;
             foreach (KeyValuePair<Group, float> kvp in baseCompatabilities)
             {
-                float popularity = kvp.Value / baseCompatabilities.Values.Max();
+                float popularity = kvp.Value;
+                float mod = this.NationalMod;
                 if (Modifiers.ContainsKey(kvp.Key))
                 {
                     mod += Modifiers[kvp.Key];
@@ -36,7 +40,8 @@ namespace DPSSimulation.Classes
                 {
                     popularity = 0;
                 }
-                popularities.Add(kvp.Key, popularity);
+
+                popularities.Add(kvp.Key, popularity / baseCompatabilities.Values.Max());
             }
             float final = 0;
             foreach (KeyValuePair<Group, float> keyValuePair in popularities)
