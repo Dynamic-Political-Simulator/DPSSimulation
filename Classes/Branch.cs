@@ -34,7 +34,7 @@ namespace DPSSimulation.Classes
                     mod += Modifiers[kvp.Key];
                 }
 
-                popularity = popularity + ((float)0.075 * popularity * mod) + ((float)0.015 * mod);
+                popularity = popularity + ((float)0.01 * popularity * mod) + ((float)0.035 * mod);
 
                 if (popularity < 0)
                 {
