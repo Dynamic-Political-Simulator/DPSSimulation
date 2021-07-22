@@ -19,8 +19,6 @@ namespace DPSSimulation.Classes
             foreach (KeyValuePair<string, int> Alignment in Alignment.Alignments)
             {
                 int h = ((Alignment.Value * Group.Alignment.Alignments[Alignment.Key] * 12) - ((Alignment.Value - Group.Alignment.Alignments[Alignment.Key]) * 275));
-                Console.WriteLine(Alignment.Key + ": " + h);
-                Console.WriteLine("-");
                 Compatabilities.Add((Alignment.Value * Group.Alignment.Alignments[Alignment.Key] * 12) - ((Alignment.Value - Group.Alignment.Alignments[Alignment.Key]) * 275));
             }
 
