@@ -67,8 +67,10 @@ namespace DPSSimulation.Classes
             //------------Setting Memmbership------------------------------------------------------------------
             //-------------------------------------------------------------------------------------------------
             Dictionary<Group, float> PIFcalcValue = new Dictionary<Group, float>();
-            foreach (KeyValuePair<Group, float> Group in PopGroupEnlistment)
+            Dictionary<Group, float> GPP = GroupPercentageOfParty(GroupsAndSizes);
+            foreach (KeyValuePair<Group, float> Group in GPP)
             {
+                // Console.WriteLine(Group.Key.Name + ": " + Group.Value);
                 if ((Group.Key.PartyInvolvementFactor - 1) < 1)
                 {
                     PIFcalcValue.Add(Group.Key, Group.Value * Group.Key.PartyInvolvementFactor);
@@ -78,9 +80,10 @@ namespace DPSSimulation.Classes
                     PIFcalcValue.Add(Group.Key, Group.Value * (Group.Key.PartyInvolvementFactor * (Group.Key.PartyInvolvementFactor - 1)));
                 }
             }
-
+            // Console.WriteLine();
             foreach (KeyValuePair<Group, float> Group in PopGroupEnlistment)
             {
+                // Console.WriteLine(Group.Key.Name + ": " + PIFcalcValue[Group.Key] / PIFcalcValue.Sum(g => g.Value));
                 if (UpperPartyMembership.ContainsKey(Group.Key))
                 {
                     UpperPartyMembership[Group.Key] = PIFcalcValue[Group.Key] / PIFcalcValue.Sum(g => g.Value);
@@ -103,11 +106,11 @@ namespace DPSSimulation.Classes
             {
                 if (LowerPartyMembership.ContainsKey(Group.Key))
                 {
-                    LowerPartyMembership[Group.Key] = Group.Value / (ulong)PeopleInLowerParty.Sum(g => (decimal)g.Value);
+                    LowerPartyMembership[Group.Key] = (float)Group.Value / (ulong)PeopleInLowerParty.Sum(g => (decimal)g.Value);
                 }
                 else
                 {
-                    LowerPartyMembership.Add(Group.Key, Group.Value / (ulong)PeopleInLowerParty.Sum(g => (decimal)g.Value));
+                    LowerPartyMembership.Add(Group.Key, (float)Group.Value / (ulong)PeopleInLowerParty.Sum(g => (decimal)g.Value));
                 }
             }
 
