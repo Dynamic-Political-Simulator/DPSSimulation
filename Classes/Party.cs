@@ -20,13 +20,14 @@ namespace DPSSimulation.Classes
             {
                 if (PopGroupEnlistment.ContainsKey(GroupJeremy.Key))
                 {
-                    PopGroupEnlistment[GroupJeremy.Key] = (GroupJeremy.Key.PartyInvolvementFactor / 10) + ((GroupJeremy.Key.PartyInvolvementFactor * GroupJeremy.Key.Radicalisation) / 30);
+                    PopGroupEnlistment[GroupJeremy.Key] = (GroupJeremy.Key.PartyInvolvementFactor / 10f) + ((GroupJeremy.Key.PartyInvolvementFactor * GroupJeremy.Key.Radicalisation) / 30);
                 }
                 else
                 {
-                    PopGroupEnlistment.Add(GroupJeremy.Key, (GroupJeremy.Key.PartyInvolvementFactor / 10) + ((GroupJeremy.Key.PartyInvolvementFactor * GroupJeremy.Key.Radicalisation) / 30));
+                    PopGroupEnlistment.Add(GroupJeremy.Key, (GroupJeremy.Key.PartyInvolvementFactor / 10f) + ((GroupJeremy.Key.PartyInvolvementFactor * GroupJeremy.Key.Radicalisation) / 30));
                 }
-                PopGroupEnlistment[GroupJeremy.Key] = (float)(PopGroupEnlistment[GroupJeremy.Key] + (PopGroupEnlistment[GroupJeremy.Key] * 0.05 * GroupJeremy.Value) + (0.05 * GroupJeremy.Value));
+                // Console.WriteLine(GroupJeremy.Key.Name + ": " + PopGroupEnlistment[GroupJeremy.Key]);
+                PopGroupEnlistment[GroupJeremy.Key] = (float)(PopGroupEnlistment[GroupJeremy.Key] + (PopGroupEnlistment[GroupJeremy.Key] * 0.05 * GroupJeremy.Value) + (0.005 * GroupJeremy.Value));
 
                 if (PopGroupEnlistment[GroupJeremy.Key] < 0)
                 {
