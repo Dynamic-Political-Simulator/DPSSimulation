@@ -13,20 +13,20 @@ namespace DPSSimulation.Classes
         public Dictionary<Faction, float> UpperPartyAffinity { get; set; } = new Dictionary<Faction, float>();
         public Dictionary<Faction, float> LowerPartyAffinity { get; set; } = new Dictionary<Faction, float>();
         public float UpperPartyPercentage { get; set; }
-        
+
         public void SetPopGroupEnlistment(Dictionary<Group, float> GroupsAndJeremy) //Needs Groups with associated weights
         {
-            foreach(KeyValuePair<Group, float> GroupJeremy in GroupsAndJeremy)
+            foreach (KeyValuePair<Group, float> GroupJeremy in GroupsAndJeremy)
             {
                 if (PopGroupEnlistment.ContainsKey(GroupJeremy.Key))
                 {
-                    PopGroupEnlistment[GroupJeremy.Key] = (GroupJeremy.Key.PartyInvolvementFactor/10)+((GroupJeremy.Key.PartyInvolvementFactor*GroupJeremy.Key.Radicalisation)/30);
+                    PopGroupEnlistment[GroupJeremy.Key] = (GroupJeremy.Key.PartyInvolvementFactor / 10) + ((GroupJeremy.Key.PartyInvolvementFactor * GroupJeremy.Key.Radicalisation) / 30);
                 }
                 else
                 {
-                    PopGroupEnlistment.Add(GroupJeremy.Key,(GroupJeremy.Key.PartyInvolvementFactor / 10) + ((GroupJeremy.Key.PartyInvolvementFactor * GroupJeremy.Key.Radicalisation) / 30));
+                    PopGroupEnlistment.Add(GroupJeremy.Key, (GroupJeremy.Key.PartyInvolvementFactor / 10) + ((GroupJeremy.Key.PartyInvolvementFactor * GroupJeremy.Key.Radicalisation) / 30));
                 }
-                PopGroupEnlistment[GroupJeremy.Key] = (float)(PopGroupEnlistment[GroupJeremy.Key] + (PopGroupEnlistment[GroupJeremy.Key] * 0.05 * GroupJeremy.Value) + (0.05*GroupJeremy.Value));
+                PopGroupEnlistment[GroupJeremy.Key] = (float)(PopGroupEnlistment[GroupJeremy.Key] + (PopGroupEnlistment[GroupJeremy.Key] * 0.05 * GroupJeremy.Value) + (0.05 * GroupJeremy.Value));
 
                 if (PopGroupEnlistment[GroupJeremy.Key] < 0)
                 {
@@ -35,11 +35,11 @@ namespace DPSSimulation.Classes
             }
         }
 
-        public float NationalEnlistment(Dictionary<Group,float> GroupsAndSizes)
+        public float NationalEnlistment(Dictionary<Group, float> GroupsAndSizes)
         {
             float Enlistment = 0;
 
-            foreach(KeyValuePair<Group,float> GroupAndSize in GroupsAndSizes)
+            foreach (KeyValuePair<Group, float> GroupAndSize in GroupsAndSizes)
             {
                 Enlistment += GroupAndSize.Value * PopGroupEnlistment[GroupAndSize.Key];
             }
@@ -47,28 +47,28 @@ namespace DPSSimulation.Classes
             return Enlistment;
         }
 
-        public Dictionary<Group, float> GroupPercentageOfParty(Dictionary<Group,float> GroupsAndSizes)
+        public Dictionary<Group, float> GroupPercentageOfParty(Dictionary<Group, float> GroupsAndSizes)
         {
             Dictionary<Group, float> GroupPercentageOfParty = new Dictionary<Group, float>();
             float NatioanEnlistment = NationalEnlistment(GroupsAndSizes);
 
-            foreach(KeyValuePair<Group,float> Group in PopGroupEnlistment)
+            foreach (KeyValuePair<Group, float> Group in PopGroupEnlistment)
             {
-                GroupPercentageOfParty.Add(Group.Key,Group.Value * GroupsAndSizes[Group.Key] / NatioanEnlistment);
+                GroupPercentageOfParty.Add(Group.Key, Group.Value * GroupsAndSizes[Group.Key] / NatioanEnlistment);
             }
 
             return GroupPercentageOfParty;
         }
 
-        public void PartyUpperAndLowerCalculation(Dictionary<Faction,float> FactionsAndJeremyUpper, Dictionary<Faction, float> FactionsAndJeremyLower, ulong Population, Dictionary<Group, float> GroupsAndSizes)
+        public void PartyUpperAndLowerCalculation(Dictionary<Faction, float> FactionsAndJeremyUpper, Dictionary<Faction, float> FactionsAndJeremyLower, ulong Population, Dictionary<Group, float> GroupsAndSizes)
         {
             //-------------------------------------------------------------------------------------------------
             //------------Setting Memmbership------------------------------------------------------------------
             //-------------------------------------------------------------------------------------------------
             Dictionary<Group, float> PIFcalcValue = new Dictionary<Group, float>();
-            foreach(KeyValuePair<Group,float> Group in PopGroupEnlistment)
+            foreach (KeyValuePair<Group, float> Group in PopGroupEnlistment)
             {
-                if ((Group.Key.PartyInvolvementFactor-1) < 1)
+                if ((Group.Key.PartyInvolvementFactor - 1) < 1)
                 {
                     PIFcalcValue.Add(Group.Key, Group.Value * Group.Key.PartyInvolvementFactor);
                 }
@@ -78,7 +78,7 @@ namespace DPSSimulation.Classes
                 }
             }
 
-            foreach(KeyValuePair<Group,float> Group in PopGroupEnlistment)
+            foreach (KeyValuePair<Group, float> Group in PopGroupEnlistment)
             {
                 if (UpperPartyMembership.ContainsKey(Group.Key))
                 {
@@ -94,19 +94,19 @@ namespace DPSSimulation.Classes
 
             Dictionary<Group, ulong> PeopleInLowerParty = new Dictionary<Group, ulong>();
 
-            foreach (KeyValuePair<Group,float> Group in PopGroupEnlistment)
+            foreach (KeyValuePair<Group, float> Group in PopGroupEnlistment)
             {
                 PeopleInLowerParty.Add(Group.Key, (ulong)((Group.Value * GroupsAndSizes[Group.Key] * Population) - (UpperPartyMembership[Group.Key] * PeopleInParty * UpperPartyPercentage)));
             }
-            foreach(KeyValuePair<Group,ulong> Group in PeopleInLowerParty)
+            foreach (KeyValuePair<Group, ulong> Group in PeopleInLowerParty)
             {
                 if (LowerPartyMembership.ContainsKey(Group.Key))
                 {
-                    UpperPartyMembership[Group.Key] = Group.Value / (ulong)PeopleInLowerParty.Sum(g => (decimal)g.Value);
+                    LowerPartyMembership[Group.Key] = Group.Value / (ulong)PeopleInLowerParty.Sum(g => (decimal)g.Value);
                 }
                 else
                 {
-                    UpperPartyMembership.Add(Group.Key, Group.Value / (ulong)PeopleInLowerParty.Sum(g => (decimal)g.Value));
+                    LowerPartyMembership.Add(Group.Key, Group.Value / (ulong)PeopleInLowerParty.Sum(g => (decimal)g.Value));
                 }
             }
 
@@ -116,7 +116,7 @@ namespace DPSSimulation.Classes
 
             //Upper Party Factions
             Dictionary<Faction, float> UpperAffinity = new Dictionary<Faction, float>();
-            foreach(KeyValuePair<Faction, float> FactionAndJeremy in FactionsAndJeremyUpper)
+            foreach (KeyValuePair<Faction, float> FactionAndJeremy in FactionsAndJeremyUpper)
             {
                 List<float> Compatabilities = new List<float>();
                 foreach (KeyValuePair<Group, float> Group in UpperPartyMembership)
@@ -131,7 +131,7 @@ namespace DPSSimulation.Classes
                 }
                 UpperAffinity.Add(FactionAndJeremy.Key, JeremyCompat);
             }
-            foreach(KeyValuePair<Faction, float> Faction in UpperAffinity)
+            foreach (KeyValuePair<Faction, float> Faction in UpperAffinity)
             {
                 if (UpperPartyAffinity.ContainsKey(Faction.Key))
                 {
